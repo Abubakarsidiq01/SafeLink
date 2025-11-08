@@ -137,12 +137,12 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-
       {pendingRequests.length > 0 && (
         <ActionRequiredSection requests={pendingRequests} onRequestClick={handleRowClick} />
       )}
 
       <RescueStatsCards stats={stats} />
+      
       <div className="dashboard__grid">
         <RescueMap rescues={rescues} onMarkerClick={handleRowClick} />
         <RescueTable rescues={rescues} onRowClick={handleRowClick} />

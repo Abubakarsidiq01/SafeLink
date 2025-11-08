@@ -9,6 +9,8 @@ import NearbyDevices from "./pages/NearbyDevices";
 import RescueLog from "./pages/RescueLog";
 import FirstAidGuide from "./pages/FirstAidGuide";
 import ReliefFeed from "./pages/ReliefFeed";
+import FindShelter from "./pages/FindShelter";
+import Donate from "./pages/Donate";
 import RequestHelpModal from "./components/dashboard/RequestHelpModal";
 import StatusUpdateModal from "./components/dashboard/StatusUpdateModal";
 import "./App.css";
@@ -25,19 +27,23 @@ function AppContent() {
       />
       <main className="appMain">
         <TopBar />
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/nearby-devices" element={<NearbyDevices />} />
-          <Route path="/rescues" element={<RescueLog />} />
-          <Route path="/first-aid" element={<FirstAidGuide />} />
-          <Route path="/relief-feed" element={<ReliefFeed />} />
-          <Route path="/settings" element={
-            <div className="pagePlaceholder">
-              <h2>Settings</h2>
-              <p>Settings page coming soon...</p>
-            </div>
-          } />
-        </Routes>
+        <div className="appMain__content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/nearby-devices" element={<NearbyDevices />} />
+            <Route path="/rescues" element={<RescueLog />} />
+            <Route path="/first-aid" element={<FirstAidGuide />} />
+            <Route path="/relief-feed" element={<ReliefFeed />} />
+            <Route path="/find-shelter" element={<FindShelter />} />
+            <Route path="/donate" element={<Donate />} />
+            <Route path="/settings" element={
+              <div className="pagePlaceholder">
+                <h2>Settings</h2>
+                <p>Settings page coming soon...</p>
+              </div>
+            } />
+          </Routes>
+        </div>
       </main>
 
       {showRequestHelpModal && (

@@ -269,7 +269,7 @@ function analyzeSituation(description) {
 }
 
 // Generate first aid instructions based on situation
-async function generateFirstAidInstructions(description) {
+async function generateFirstAidInstructions(description, includeImages = true) {
   const situation = analyzeSituation(description);
   
   if (situation === "general") {
@@ -292,13 +292,15 @@ async function generateFirstAidInstructions(description) {
       },
     ];
 
-    // Generate images for general steps
-    const stepsWithImages = await Promise.all(
-      generalSteps.map(async (step) => ({
-        ...step,
-        image: await ImageGenerator.getImageForStep("general", step.title, step.description),
-      }))
-    );
+    // Generate images for general steps only if includeImages is true
+    const stepsWithImages = includeImages
+      ? await Promise.all(
+          generalSteps.map(async (step) => ({
+            ...step,
+            image: await ImageGenerator.getImageForStep("general", step.title, step.description),
+          }))
+        )
+      : generalSteps;
 
     return {
       title: "General First Aid Instructions",
@@ -316,16 +318,24 @@ async function generateFirstAidInstructions(description) {
 
   const instructions = JSON.parse(JSON.stringify(firstAidKnowledge[situation])); // Deep copy
   
-  // Generate images for each step that doesn't have one
-  instructions.steps = await Promise.all(
-    instructions.steps.map(async (step) => {
-      // Only generate image if step doesn't already have one, or if existing image is a broken Unsplash URL
-      if (!step.image || step.image.includes("unsplash.com")) {
-        step.image = await ImageGenerator.getImageForStep(situation, step.title, step.description);
-      }
-      return step;
-    })
-  );
+  // Generate images for each step only if includeImages is true
+  if (includeImages) {
+    instructions.steps = await Promise.all(
+      instructions.steps.map(async (step) => {
+        // Only generate image if step doesn't already have one, or if existing image is a broken Unsplash URL
+        if (!step.image || step.image.includes("unsplash.com")) {
+          step.image = await ImageGenerator.getImageForStep(situation, step.title, step.description);
+        }
+        return step;
+      })
+    );
+  } else {
+    // Remove images if includeImages is false
+    instructions.steps = instructions.steps.map((step) => {
+      const { image, ...stepWithoutImage } = step;
+      return stepWithoutImage;
+    });
+  }
   
   // Add additional resources
   instructions.additionalResources = [

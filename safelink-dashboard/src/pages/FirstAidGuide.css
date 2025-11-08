@@ -156,6 +156,31 @@
   margin-bottom: 16px;
 }
 
+.inputCard__options {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.inputCard__checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+}
+
+.inputCard__checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
 .getInstructionsButton {
   width: 100%;
   padding: 14px;
@@ -236,10 +261,72 @@
 .instructionsCard__header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 2px solid #f1f5f9;
+  gap: 16px;
+}
+
+.instructionsCard__headerContent {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.instructionsCard__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.readAloudControls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.readAloudButton {
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3b82f6;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.readAloudButton:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.readAloudButton--active {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.readAloudButton--active:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.readAloudButton--pause {
+  border-color: #64748b;
+  color: #64748b;
+}
+
+.readAloudButton--pause:hover {
+  background: #f8fafc;
+  border-color: #475569;
+  color: #475569;
 }
 
 .instructionsCard__title {

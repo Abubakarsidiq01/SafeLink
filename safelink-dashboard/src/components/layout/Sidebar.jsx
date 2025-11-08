@@ -16,7 +16,7 @@ export default function Sidebar({ onRequestHelp, onStatusUpdate }) {
     <aside className="sidebar">
       <div className="sidebar__logo">
         <span className="sidebar__dot" />
-        <span>SafeLink Command</span>
+        <span>SafeLink</span>
       </div>
       <nav className="sidebar__nav">
         <div className="sidebar__sectionTitle">Overview</div>
@@ -25,6 +25,12 @@ export default function Sidebar({ onRequestHelp, onStatusUpdate }) {
           onClick={() => navigate("/")}
         >
           Dashboard
+        </button>
+        <button
+          className={`sidebar__item ${isActive("/find-shelter") ? "sidebar__item--active" : ""}`}
+          onClick={() => navigate("/find-shelter")}
+        >
+          Find Shelter
         </button>
         <button
           className={`sidebar__item ${isActive("/nearby-devices") ? "sidebar__item--active" : ""}`}
@@ -49,6 +55,12 @@ export default function Sidebar({ onRequestHelp, onStatusUpdate }) {
           onClick={() => navigate("/relief-feed")}
         >
           Relief/Donation Feed
+        </button>
+        <button
+          className={`sidebar__item ${isActive("/donate") ? "sidebar__item--active" : ""}`}
+          onClick={() => navigate("/donate")}
+        >
+          Donate Money
         </button>
         
         <div className="sidebar__sectionTitle" style={{ marginTop: "24px" }}>

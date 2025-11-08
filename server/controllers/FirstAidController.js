@@ -4,7 +4,7 @@ const FirstAidModel = require("../models/FirstAidModel");
 
 async function getFirstAidInstructions(req, res) {
   try {
-    const { description } = req.body;
+    const { description, includeImages = true } = req.body;
 
     if (!description || !description.trim()) {
       return res.status(400).json({
@@ -14,10 +14,10 @@ async function getFirstAidInstructions(req, res) {
     }
 
     // Generate AI-powered first aid instructions (now async)
-    const instructions = await FirstAidModel.generateFirstAidInstructions(description.trim());
+    const instructions = await FirstAidModel.generateFirstAidInstructions(description.trim(), includeImages);
 
     console.log(
-      `[SafeLink][FirstAidController] ✅ First aid instructions generated for: ${description.substring(0, 50)}...`
+      `[SafeLink][FirstAidController] ✅ First aid instructions generated for: ${description.substring(0, 50)}... (images: ${includeImages})`
     );
 
     res.json({

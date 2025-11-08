@@ -17,6 +17,10 @@ export default function TopBar() {
         return "AI First Aid Guide";
       case "/relief-feed":
         return "Relief & Donation Feed";
+      case "/find-shelter":
+        return "Find Shelter";
+      case "/donate":
+        return "Donate Money";
       case "/settings":
         return "Settings";
       default:
@@ -34,6 +38,10 @@ export default function TopBar() {
         return "Get AI-powered first aid instructions based on your situation. Supports multiple languages with voice input.";
       case "/relief-feed":
         return "Browse and contribute to relief efforts in your area. Donate money, items, or upvote urgent requests.";
+      case "/find-shelter":
+        return "Find nearby shelters, hospitals, and safe places during emergencies. Get directions and route information.";
+      case "/donate":
+        return "Make a general donation to support relief efforts. Your contribution helps those in need across the network.";
       case "/settings":
         return "Configure your SafeLink Mesh AI dashboard.";
       default:

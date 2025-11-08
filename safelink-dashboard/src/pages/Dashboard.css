@@ -1,7 +1,9 @@
 .dashboard {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .dashboard__headerActions {
@@ -9,6 +11,7 @@
   justify-content: flex-end;
   margin-bottom: -8px;
 }
+
 
 .dashboard__requestHelpBtn {
   display: flex;
@@ -38,8 +41,11 @@
 .dashboard__grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 24px;
-  align-items: start;
+  gap: 12px;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .dashboard__loading {
@@ -49,10 +55,11 @@
   gap: 12px;
   font-size: 14px;
   color: #64748b;
-  padding: 60px 20px;
+  padding: 40px 20px;
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid #e2e8f0;
+  height: 100%;
 }
 
 .dashboard__error {
@@ -61,10 +68,11 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: 60px 20px;
+  padding: 40px 20px;
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid #e2e8f0;
+  height: 100%;
 }
 
 .dashboard__error p {

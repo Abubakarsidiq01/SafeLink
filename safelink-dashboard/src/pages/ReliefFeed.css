@@ -16,6 +16,28 @@
   margin-bottom: 24px;
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Donate Money Button */
+.reliefFeed__donateBtn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Lexend Deca", sans-serif;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.reliefFeed__donateBtn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 /* Create Post Button */
@@ -28,12 +50,15 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   font-family: "Lexend Deca", sans-serif;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .reliefFeed__createBtn:hover {
   background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .reliefFeed__createBtn:active {
@@ -46,6 +71,10 @@
   }
 
   .reliefFeed__createBtn {
+    width: 100%;
+  }
+
+  .reliefFeed__donateBtn {
     width: 100%;
   }
 }
@@ -198,17 +227,22 @@
   }
 }
 
-/* Post Card - Professional Social Media Style */
+/* Post Card - Instagram-like Social Media Style */
 .postCard {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   width: 100%;
+  transition: box-shadow 0.2s ease;
+}
+
+.postCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* Post Header */
@@ -216,17 +250,23 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 16px;
   border-bottom: 1px solid #f1f5f9;
 }
 
 .postCard__avatar {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   overflow: hidden;
   flex-shrink: 0;
   border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.postCard__avatar:hover {
+  transform: scale(1.05);
 }
 
 .postCard__avatarImg {
@@ -258,12 +298,18 @@
 
 .postCard__userName {
   font-weight: 600;
-  color: #1f2937;
-  font-size: 15px;
+  color: #0f172a;
+  font-size: 14px;
   font-family: "Lexend Deca", sans-serif;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.postCard__userName:hover {
+  color: #3b82f6;
 }
 
 .postCard__location {
@@ -291,7 +337,9 @@
 .postCard__mediaContainer {
   position: relative;
   width: 100%;
+  aspect-ratio: 16 / 9;
   max-height: 500px;
+  min-height: 300px;
   overflow: hidden;
   background: #f8fafc;
   display: flex;
@@ -301,19 +349,19 @@
 
 .postCard__image {
   width: 100%;
-  height: auto;
-  max-height: 500px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   display: block;
+  min-height: 100%;
 }
 
 .postCard__video {
   width: 100%;
-  height: auto;
-  max-height: 500px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   display: block;
   background: #000000;
+  min-height: 100%;
 }
 
 
@@ -349,29 +397,30 @@
 
 /* Content Section */
 .postCard__content {
-  padding: 14px 16px;
+  padding: 12px 16px 8px;
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 .postCard__title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 10px 0;
-  line-height: 1.4;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.5;
   font-family: "Lexend Deca", sans-serif;
-  letter-spacing: -0.2px;
 }
 
 .postCard__description {
   font-size: 14px;
   color: #475569;
   line-height: 1.6;
-  margin: 0 0 10px 0;
+  margin: 0;
   font-weight: 400;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .postCard__description--clamped {
@@ -467,42 +516,43 @@
 
 /* Action Buttons */
 .postCard__actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 12px 16px;
+  display: flex;
+  gap: 12px;
+  padding: 8px 16px;
   border-bottom: 1px solid #f1f5f9;
+  align-items: center;
 }
 
 .postCard__actionBtn {
-  padding: 12px 16px;
-  border: 1.5px solid #e2e8f0;
-  background: #ffffff;
-  border-radius: 10px;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   font-family: "Lexend Deca", sans-serif;
-  color: #475569;
+  color: #64748b;
+  flex: 0 0 auto;
 }
 
 .postCard__actionBtn:hover:not(:disabled) {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  background: #eff6ff;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+  background: #f8fafc;
+  color: #0f172a;
 }
 
 .postCard__actionBtn--active {
-  border-color: #3b82f6;
   color: #3b82f6;
+}
+
+.postCard__actionBtn--active:hover:not(:disabled) {
   background: #eff6ff;
+  color: #2563eb;
 }
 
 .postCard__actionBtn:disabled {
@@ -513,6 +563,16 @@
 
 .postCard__actionBtn--upvote {
   font-size: 16px;
+  gap: 4px;
+}
+
+.postCard__actionBtn--upvote span:first-child {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.postCard__actionBtn--donate {
+  flex: 1;
 }
 
 /* Donate Button - Prominent Design */

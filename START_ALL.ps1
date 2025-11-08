@@ -111,6 +111,17 @@ try {
     Write-Host "     You can add data manually later" -ForegroundColor Gray
 }
 
+# Step 6: Start CrisisRoute (Find Shelter app)
+Write-Host "`nStep 6: Starting CrisisRoute (Find Shelter)..." -ForegroundColor Yellow
+$crisisRoutePath = Join-Path $PSScriptRoot "lifeline-ui"
+if (Test-Path $crisisRoutePath) {
+    Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$crisisRoutePath'; Write-Host '`n[CrisisRoute Shelter Finder]' -ForegroundColor Green; Write-Host 'Starting on http://localhost:5173...' -ForegroundColor Cyan; Write-Host 'This will be embedded in the Dashboard' -ForegroundColor Gray; Write-Host ''; npm run dev" -WindowStyle Normal
+    Write-Host "  ✅ CrisisRoute starting in new window" -ForegroundColor Green
+    Write-Host "  🌐 CrisisRoute will run on: http://localhost:5173" -ForegroundColor Cyan
+} else {
+    Write-Host "  ⚠️  lifeline-ui directory not found" -ForegroundColor Yellow
+}
+
 # Summary
 Write-Host "`n===============================================" -ForegroundColor Cyan
 Write-Host "   ✅ SYSTEM STARTED!" -ForegroundColor Green
@@ -127,10 +138,14 @@ Write-Host "  Status: Opening in Chrome..." -ForegroundColor Green
 Write-Host ""
 Write-Host "Next Steps:" -ForegroundColor Yellow
 Write-Host "  1. Wait for dashboard to open in Chrome" -ForegroundColor White
-Write-Host "  2. Verify statistics display correctly" -ForegroundColor White
-Write-Host "  3. Check map shows markers (if data exists)" -ForegroundColor White
-Write-Host "  4. Verify table displays rescue events" -ForegroundColor White
+Write-Host "  2. Click 'Find Shelter' in sidebar to test" -ForegroundColor White
+Write-Host "  3. Enter text or use voice to get route recommendations" -ForegroundColor White
+Write-Host "  4. Verify routes are displayed with maps and directions" -ForegroundColor White
 Write-Host ""
-Write-Host "System is ready for testing!" -ForegroundColor Green
+Write-Host "CrisisRoute (Find Shelter):" -ForegroundColor Yellow
+Write-Host "  URL: http://localhost:5173 (embedded in Dashboard)" -ForegroundColor Cyan
 Write-Host ""
+Write-Host "All Find Shelter features are integrated into the main backend! -ForegroundColor Green
+Write-Host ""
+
 

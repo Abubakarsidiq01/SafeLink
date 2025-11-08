@@ -8,3 +8,8 @@ build/
 *.swp
 *.swo
 *.tmp
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python

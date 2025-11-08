@@ -243,7 +243,20 @@
 }
 
 .locationInfo__icon {
-  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  background: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.locationInfo__icon::before {
+  content: "📍";
+  font-size: 12px;
 }
 
 .locationInfo__details {

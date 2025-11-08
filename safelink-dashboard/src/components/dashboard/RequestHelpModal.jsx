@@ -13,6 +13,7 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
   const [address, setAddress] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [speechError, setSpeechError] = useState(null);
+  const [isGettingLocation, setIsGettingLocation] = useState(true);
   const recognitionRef = useRef(null);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
 
@@ -88,17 +89,94 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
       setIsSpeechSupported(false);
     }
 
-    // Get user's location
+    // Get fresh location function
+    const getLocation = async (showLoading = false) => {
+      if (showLoading) setLocationError(null);
+      
+      return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+          setLocationError("Geolocation is not supported by your browser.");
+          resolve(null);
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const coords = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+            setLocation(coords);
+            setLocationError(null);
+            
+            // Reverse geocode to get address
+            try {
+              const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}&zoom=18&addressdetails=1`
+              );
+              const data = await response.json();
+              
+              if (data.address) {
+                const addr = data.address;
+                const addressParts = [
+                  addr.house_number,
+                  addr.road,
+                  addr.neighbourhood || addr.suburb,
+                  addr.city || addr.town,
+                  addr.state,
+                ].filter(Boolean);
+                setAddress(addressParts.join(", ") || "Location detected");
+              } else {
+                setAddress("Location detected");
+              }
+            } catch (err) {
+              setAddress(`${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`);
+            }
+            
+            resolve(coords);
+          },
+          (error) => {
+            console.error("Geolocation error:", error);
+            setLocationError("Could not get your location. Please enable location access.");
+            resolve(null);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0, // Always get fresh location
+          }
+        );
+      });
+    };
+
+    // Get initial location
+    getLocation(true);
+
+    // Set up location watcher for real-time updates
+    let locationWatchId = null;
+    let lastLocation = null;
+    
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
+      locationWatchId = navigator.geolocation.watchPosition(
         async (position) => {
           const coords = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           };
+          
+          // Only update if location changed significantly (more than 10 meters)
+          if (lastLocation) {
+            const distance = Math.sqrt(
+              Math.pow(coords.latitude - lastLocation.latitude, 2) +
+              Math.pow(coords.longitude - lastLocation.longitude, 2)
+            );
+            // Skip update if change is less than ~0.0001 degrees (~11 meters)
+            if (distance < 0.0001) return;
+          }
+          
+          lastLocation = coords;
           setLocation(coords);
           
-          // Reverse geocode to get address
           try {
             const response = await fetch(
               `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}&zoom=18&addressdetails=1`
@@ -115,26 +193,33 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
                 addr.state,
               ].filter(Boolean);
               setAddress(addressParts.join(", ") || "Location detected");
-            } else {
-              setAddress("Location detected");
             }
           } catch (err) {
-            setAddress("Location detected");
+            // Silently fail for watcher updates
+            console.error("Reverse geocoding error:", err);
           }
         },
-        (error) => {
-          console.error("Geolocation error:", error);
-          setLocationError("Could not get your location. Please enable location access.");
+        (err) => {
+          console.error("Geolocation watch error:", err);
+        },
+        {
+          enableHighAccuracy: true,
+          maximumAge: 5000, // Update every 5 seconds max
+          timeout: 10000,
         }
       );
-    } else {
-      setLocationError("Geolocation is not supported by your browser.");
     }
+
+    // Store watch ID for cleanup
+    const watchIdRef = { current: locationWatchId };
 
     // Cleanup on unmount
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
+      }
+      if (watchIdRef.current && navigator.geolocation) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
       }
     };
   }, []);
@@ -174,6 +259,63 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
     }
   };
 
+  const handleRefreshLocation = async () => {
+    setIsGettingLocation(true);
+    setLocationError(null);
+    
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      setIsGettingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        setLocation(coords);
+        setLocationError(null);
+        
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}&zoom=18&addressdetails=1`
+          );
+          const data = await response.json();
+          
+          if (data.address) {
+            const addr = data.address;
+            const addressParts = [
+              addr.house_number,
+              addr.road,
+              addr.neighbourhood || addr.suburb,
+              addr.city || addr.town,
+              addr.state,
+            ].filter(Boolean);
+            setAddress(addressParts.join(", ") || "Location detected");
+          } else {
+            setAddress("Location detected");
+          }
+        } catch (err) {
+          setAddress(`${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`);
+        }
+        
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setLocationError("Could not get your location. Please enable location access.");
+        setIsGettingLocation(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -181,6 +323,31 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
     if (isListening && recognitionRef.current) {
       recognitionRef.current.stop();
     }
+    
+    // Get fresh location before submitting
+    setIsGettingLocation(true);
+    let freshLocation = location;
+    
+    if (navigator.geolocation) {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+          });
+        });
+        freshLocation = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        setLocation(freshLocation);
+      } catch (err) {
+        console.error("Error getting fresh location:", err);
+      }
+    }
+    
+    setIsGettingLocation(false);
     
     // Clean message of any interim text
     const cleanMessage = message.replace(/\[Listening\.\.\.\]/g, "").trim();
@@ -190,7 +357,7 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
       return;
     }
 
-    if (!location) {
+    if (!freshLocation) {
       setError("Location is required. Please enable location access.");
       return;
     }
@@ -201,8 +368,8 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
     try {
       const requestData = {
         message: cleanMessage,
-        latitude: location.latitude,
-        longitude: location.longitude,
+        latitude: freshLocation.latitude,
+        longitude: freshLocation.longitude,
         address: address || "Location detected",
         status: "pending",
       };
@@ -293,20 +460,42 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
           </div>
 
           <div className="formGroup">
-            <label className="formLabel">Your Location</label>
+            <div className="formLabelRow">
+              <label className="formLabel">Your Location</label>
+              <button
+                type="button"
+                onClick={handleRefreshLocation}
+                disabled={isGettingLocation || loading}
+                className="voiceButton"
+                style={{ fontSize: "12px", padding: "4px 10px" }}
+                title="Refresh location"
+              >
+                {isGettingLocation ? "Updating..." : "Refresh"}
+              </button>
+            </div>
             {location ? (
               <div className="locationInfo">
-                <div className="locationInfo__icon">📍</div>
+                <div className="locationInfo__icon"></div>
                 <div className="locationInfo__details">
                   <div className="locationInfo__address">{address || "Location detected"}</div>
                   <div className="locationInfo__coords">
                     {location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}
                   </div>
+                  {!isGettingLocation && (
+                    <div style={{ fontSize: "11px", color: "#10b981", marginTop: "4px", fontWeight: "600" }}>
+                      Location tracking active
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
               <div className="locationError">
                 {locationError || "Getting your location..."}
+              </div>
+            )}
+            {isGettingLocation && (
+              <div className="formHint" style={{ marginTop: "8px", color: "#ef4444" }}>
+                Getting fresh location...
               </div>
             )}
           </div>
@@ -329,7 +518,7 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
             <button
               type="submit"
               className="btn btn--primary"
-              disabled={loading || !location || !message.trim()}
+              disabled={loading || !location || !message.trim() || isGettingLocation}
             >
               {loading ? "Submitting..." : "Request Help"}
             </button>

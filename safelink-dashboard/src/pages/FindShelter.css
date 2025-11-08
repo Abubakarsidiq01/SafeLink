@@ -1,0 +1,527 @@
+.findShelter {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.findShelter__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.findShelter__headerContent {
+  flex: 1;
+}
+
+.findShelter__title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #0f172a;
+  font-family: "Lexend Deca", sans-serif;
+  letter-spacing: -0.5px;
+}
+
+.findShelter__subtitle {
+  font-size: 14px;
+  margin: 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.findShelter__backBtn {
+  padding: 10px 20px;
+  background: #ffffff;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.findShelter__backBtn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+/* Emergency Alert */
+.findShelter__emergencyAlert {
+  padding: 16px 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  border-left: 4px solid #ef4444;
+}
+
+.findShelter__emergencyContent {
+  font-size: 14px;
+  color: #991b1b;
+  line-height: 1.5;
+}
+
+.findShelter__emergencyLink {
+  color: #dc2626;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.findShelter__emergencyLink:hover {
+  text-decoration: underline;
+}
+
+/* Input Section */
+.findShelter__inputSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.findShelter__inputCard {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.findShelter__inputTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: #0f172a;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.findShelter__inputDescription {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+.findShelter__inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.findShelter__textarea {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: "Lexend Deca", sans-serif;
+  resize: vertical;
+  transition: border-color 0.2s;
+  background: #ffffff;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.findShelter__textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.findShelter__textarea::placeholder {
+  color: #94a3b8;
+}
+
+.findShelter__textarea:disabled {
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+.findShelter__inputActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.findShelter__voiceBtn {
+  padding: 12px 24px;
+  background: #ffffff;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.findShelter__voiceBtn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.findShelter__voiceBtn--active {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+.findShelter__voiceBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.findShelter__submitBtn {
+  flex: 1;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Lexend Deca", sans-serif;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.findShelter__submitBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.findShelter__submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Quick Actions */
+.findShelter__quickActions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.findShelter__quickBtn {
+  padding: 16px 24px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.findShelter__quickBtn--medical {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.findShelter__quickBtn--medical:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+
+.findShelter__quickBtn--police {
+  border-color: #f59e0b;
+  color: #d97706;
+}
+
+.findShelter__quickBtn--police:hover:not(:disabled) {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.findShelter__quickBtn--shelter {
+  border-color: #3b82f6;
+  color: #2563eb;
+}
+
+.findShelter__quickBtn--shelter:hover:not(:disabled) {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.findShelter__quickBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Status */
+.findShelter__status {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.findShelter__status--success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.findShelter__status--warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Loading State */
+.findShelter__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #64748b;
+  padding: 60px 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.findShelter__loading .spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Results Grid */
+.findShelter__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+
+.findShelter__card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.findShelter__card--map {
+  padding: 0;
+  overflow: hidden;
+}
+
+.findShelter__cardTitle {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #64748b;
+  font-family: "Lexend Deca", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.findShelter__card--map .findShelter__cardTitle {
+  padding: 24px 24px 0 24px;
+  margin-bottom: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.findShelter__map {
+  width: 100%;
+  height: 500px;
+  border: none;
+  display: block;
+}
+
+.findShelter__mapPlaceholder {
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+  background: #f8fafc;
+}
+
+.findShelter__destination {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.findShelter__destinationName {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: "Lexend Deca", sans-serif;
+  line-height: 1.3;
+}
+
+.findShelter__destinationAddress {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.findShelter__routeInfo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.findShelter__routeItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.findShelter__routeLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.findShelter__routeValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+/* Route Steps */
+.findShelter__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.findShelter__step {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.findShelter__stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.findShelter__stepContent {
+  flex: 1;
+}
+
+.findShelter__stepInstruction {
+  font-size: 14px;
+  color: #0f172a;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.findShelter__stepInstruction :global(a) {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.findShelter__stepInstruction :global(a):hover {
+  text-decoration: underline;
+}
+
+.findShelter__stepInstruction :global(b) {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.findShelter__stepDetails {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* Error Message */
+.findShelter__error {
+  padding: 16px 20px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #991b1b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .findShelter__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .findShelter__routeInfo {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .findShelter__quickActions {
+    grid-template-columns: 1fr;
+  }
+
+  .findShelter__inputActions {
+    flex-direction: column;
+  }
+
+  .findShelter__submitBtn {
+    width: 100%;
+  }
+
+  .findShelter__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .findShelter__backBtn {
+    width: 100%;
+  }
+
+  .findShelter__inputCard {
+    padding: 24px;
+  }
+}

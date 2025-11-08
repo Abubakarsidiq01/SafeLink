@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchPosts, upvotePost, donateMoney, donateItems } from '../lib/firebase/firestoreApi.js'
+import { useNavigate } from 'react-router-dom'
 import { auth } from '../lib/firebase/firebase.js'
 import CreatePostModal from '../components/feed/CreatePostModal.jsx'
 import './ReliefFeed.css'
@@ -21,6 +22,7 @@ function useFeedData(filters) {
 
 export default function ReliefFeed() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const [filters, setFilters] = useState({ helpType: undefined, urgency: undefined, mine: undefined })
   const [moneyModal, setMoneyModal] = useState({ open: false, postId: null })
   const [itemModal, setItemModal] = useState({ open: false, postId: null })
@@ -55,10 +57,16 @@ export default function ReliefFeed() {
   async function handleUpvote(postId, isActive) {
     try {
       await upvotePost(postId, isActive)
+      // Invalidate queries to refresh the feed with updated upvote counts
       queryClient.invalidateQueries({ queryKey: ['feed'] })
       showToast(isActive ? 'Upvoted!' : 'Upvote removed')
     } catch (err) {
       console.error('Upvote error:', err)
+      // Show user-friendly error message
+      const errorMessage = err.message?.includes('permission') 
+        ? 'Unable to upvote. Please check your connection.'
+        : err.message || 'Failed to upvote. Please try again.'
+      showToast(errorMessage)
     }
   }
 
@@ -97,6 +105,12 @@ export default function ReliefFeed() {
     <div className="reliefFeed">
       <div className="reliefFeed__container">
         <div className="reliefFeed__actions">
+          <button
+            className="reliefFeed__donateBtn"
+            onClick={() => navigate("/donate")}
+          >
+            Donate Money
+          </button>
           <button
             className="reliefFeed__createBtn"
             onClick={() => setCreatePostModal(true)}
@@ -274,6 +288,7 @@ function PostCard({ post, onUpvote, onDonateMoney, onDonateItem, viewerCoords })
         <button
           className={`postCard__actionBtn postCard__actionBtn--upvote ${viewerHasUpvoted ? 'postCard__actionBtn--active' : ''}`}
           onClick={() => onUpvote(post.id, !viewerHasUpvoted)}
+          title={viewerHasUpvoted ? 'Remove upvote' : 'Upvote this post'}
         >
           <span>⬆️</span>
           <span>{post.upvoteCount || 0}</span>

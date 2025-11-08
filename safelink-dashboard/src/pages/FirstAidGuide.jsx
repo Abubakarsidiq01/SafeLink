@@ -14,7 +14,12 @@ export default function FirstAidGuide() {
   const [isListening, setIsListening] = useState(false);
   const [speechError, setSpeechError] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("en-US");
+  const [includeImages, setIncludeImages] = useState(true);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const recognitionRef = useRef(null);
+  const synthRef = useRef(null);
+  const utteranceRef = useRef(null);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
   const [languageOptions] = useState([
     { code: "en-US", name: "English" },
@@ -142,7 +147,7 @@ export default function FirstAidGuide() {
     setInstructions(null);
 
     try {
-      const result = await getFirstAidInstructions(cleanDescription);
+      const result = await getFirstAidInstructions(cleanDescription, includeImages);
       setInstructions(result);
     } catch (err) {
       console.error("Error getting first aid instructions:", err);
@@ -151,6 +156,124 @@ export default function FirstAidGuide() {
       setLoading(false);
     }
   };
+
+  // Text-to-speech functions
+  const getInstructionText = () => {
+    if (!instructions) return "";
+    
+    let text = `${instructions.title}.\n\n`;
+    
+    if (instructions.overview) {
+      text += `Overview: ${instructions.overview}\n\n`;
+    }
+    
+    if (instructions.steps && instructions.steps.length > 0) {
+      text += "Step-by-Step Instructions:\n\n";
+      instructions.steps.forEach((step, index) => {
+        text += `Step ${index + 1}: ${step.title}. ${step.description}\n\n`;
+      });
+    }
+    
+    if (instructions.importantNotes && instructions.importantNotes.length > 0) {
+      text += "Important Notes:\n\n";
+      instructions.importantNotes.forEach((note) => {
+        text += `${note}\n`;
+      });
+      text += "\n";
+    }
+    
+    if (instructions.whenToSeekHelp) {
+      text += `When to Seek Professional Help: ${instructions.whenToSeekHelp}\n`;
+    }
+    
+    return text;
+  };
+
+  const handleReadAloud = () => {
+    if (isSpeaking && !isPaused) {
+      // Stop speaking
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      setIsSpeaking(false);
+      setIsPaused(false);
+      return;
+    }
+
+    if (isPaused) {
+      // Resume speaking
+      if (window.speechSynthesis) {
+        window.speechSynthesis.resume();
+      }
+      setIsPaused(false);
+      setIsSpeaking(true);
+      return;
+    }
+
+    // Start speaking
+    const text = getInstructionText();
+    if (!text || !window.speechSynthesis) {
+      setError("Text-to-speech is not supported in your browser.");
+      return;
+    }
+
+    // Cancel any existing speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = selectedLanguage;
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      setIsPaused(false);
+    };
+
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setIsPaused(false);
+    };
+
+    utterance.onerror = (event) => {
+      console.error("Speech synthesis error:", event);
+      setIsSpeaking(false);
+      setIsPaused(false);
+      setError("Error reading text aloud. Please try again.");
+    };
+
+    utteranceRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handlePauseResume = () => {
+    if (!window.speechSynthesis) return;
+    
+    if (isPaused) {
+      // Resume
+      window.speechSynthesis.resume();
+      setIsPaused(false);
+      setIsSpeaking(true);
+    } else if (isSpeaking) {
+      // Pause
+      window.speechSynthesis.pause();
+      setIsPaused(true);
+      setIsSpeaking(false);
+    }
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
   return (
     <div className="firstAidGuide">
@@ -226,20 +349,34 @@ export default function FirstAidGuide() {
             <div className="inputCard__hint">
               Describe the injury, medical condition, or emergency situation. You can speak or type in multiple languages.
             </div>
+            
+            <div className="inputCard__options">
+              <label className="inputCard__checkboxLabel">
+                <input
+                  type="checkbox"
+                  checked={includeImages}
+                  onChange={(e) => setIncludeImages(e.target.checked)}
+                  disabled={loading}
+                  className="inputCard__checkbox"
+                />
+                <span>Include images in instructions</span>
+              </label>
+            </div>
+
             <div style={{ display: "flex", gap: "12px", flexDirection: "column" }}>
               <button
                 className="getInstructionsButton"
                 onClick={handleGetInstructions}
                 disabled={loading || !description.trim() || isListening}
               >
-                {loading ? "Getting Instructions..." : "🩹 Get First Aid Instructions"}
+                {loading ? "Getting Instructions..." : "Get First Aid Instructions"}
               </button>
               {instructions && (
                 <button
                   className="conversationalButton"
                   onClick={() => setShowConversationalDialog(true)}
                 >
-                  🗣️ Start Conversational Guide (Voice)
+                  Start Conversational Guide (Voice)
                 </button>
               )}
             </div>
@@ -256,14 +393,50 @@ export default function FirstAidGuide() {
         {instructions && (
           <div className="instructionsCard">
             <div className="instructionsCard__header">
-              <h2 className="instructionsCard__title">
-                {instructions.title || "First Aid Instructions"}
-              </h2>
-              {instructions.severity && (
-                <span className={`severityBadge severityBadge--${instructions.severity.toLowerCase()}`}>
-                  {instructions.severity}
-                </span>
-              )}
+              <div className="instructionsCard__headerContent">
+                <h2 className="instructionsCard__title">
+                  {instructions.title || "First Aid Instructions"}
+                </h2>
+                {instructions.severity && (
+                  <span className={`severityBadge severityBadge--${instructions.severity.toLowerCase()}`}>
+                    {instructions.severity}
+                  </span>
+                )}
+              </div>
+              <div className="instructionsCard__actions">
+                {window.speechSynthesis && (
+                  <div className="readAloudControls">
+                    <button
+                      className={`readAloudButton ${
+                        (isSpeaking && !isPaused) ? "readAloudButton--active" : ""
+                      }`}
+                      onClick={handleReadAloud}
+                      title={
+                        isPaused 
+                          ? "Resume reading" 
+                          : isSpeaking 
+                          ? "Stop reading" 
+                          : "Read aloud"
+                      }
+                    >
+                      {isPaused 
+                        ? "Resume" 
+                        : isSpeaking 
+                        ? "Stop" 
+                        : "Read Aloud"}
+                    </button>
+                    {isSpeaking && !isPaused && (
+                      <button
+                        className="readAloudButton readAloudButton--pause"
+                        onClick={handlePauseResume}
+                        title="Pause"
+                      >
+                        Pause
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {instructions.overview && (

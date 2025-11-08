@@ -93,14 +93,27 @@ export async function getPost(postId) {
 
 /**
  * Toggle upvote on a post
+ * Automatically signs in anonymously if user is not authenticated
  */
 export async function upvotePost(postId, isActive) {
   try {
-    const user = auth.currentUser
-    if (!user) throw new Error('Must be logged in to upvote')
+    // Ensure user is authenticated (sign in anonymously if needed)
+    let currentUser = auth.currentUser
+    if (!currentUser) {
+      try {
+        const { signInAnonymously } = await import('firebase/auth')
+        const userCredential = await signInAnonymously(auth)
+        currentUser = userCredential.user
+        console.log('[upvotePost] ✅ Signed in anonymously for upvote, UID:', currentUser.uid)
+      } catch (authError) {
+        console.error('Anonymous sign-in failed:', authError)
+        // If anonymous auth fails, show a helpful error message
+        throw new Error('Unable to upvote. Please refresh the page and try again.')
+      }
+    }
 
     const docRef = doc(db, POSTS_COLLECTION, postId)
-    const voterKey = `voters.${user.uid}`
+    const voterKey = `voters.${currentUser.uid}`
 
     if (isActive) {
       await updateDoc(docRef, {
@@ -108,12 +121,14 @@ export async function upvotePost(postId, isActive) {
         [voterKey]: true,
         priorityScore: increment(1),
       })
+      console.log('[upvotePost] ✅ Upvote added for user:', currentUser.uid)
     } else {
       await updateDoc(docRef, {
         upvoteCount: increment(-1),
         [voterKey]: null,
         priorityScore: increment(-1),
       })
+      console.log('[upvotePost] ✅ Upvote removed for user:', currentUser.uid)
     }
   } catch (error) {
     console.error('Error toggling upvote:', error)
@@ -306,6 +321,41 @@ export async function createPost(postData, mediaFile) {
     return { id: docRef.id, ...newPost }
   } catch (error) {
     console.error('Error creating post:', error)
+    throw error
+  }
+}
+
+/**
+ * Create a general donation (not tied to a specific post)
+ */
+export async function createGeneralDonation(donationData) {
+  try {
+    const user = auth.currentUser
+    if (!user) {
+      // Sign in anonymously if not authenticated
+      try {
+        const { signInAnonymously } = await import('firebase/auth')
+        await signInAnonymously(auth)
+        // Continue with donation
+      } catch (authError) {
+        console.error('Anonymous sign-in failed:', authError)
+        throw new Error('Please enable anonymous authentication in Firebase Console')
+      }
+    }
+
+    const donationsRef = collection(db, 'generalDonations')
+    const newDonation = {
+      userId: auth.currentUser?.uid || 'anonymous',
+      donorName: donationData.donorName || 'Anonymous',
+      amount: donationData.amount,
+      message: donationData.message || '',
+      createdAt: serverTimestamp(),
+    }
+
+    const docRef = await addDoc(donationsRef, newDonation)
+    return { id: docRef.id, ...newDonation }
+  } catch (error) {
+    console.error('Error creating general donation:', error)
     throw error
   }
 }
