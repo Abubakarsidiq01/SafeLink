@@ -1,0 +1,50 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    // Posts collection
+    match /posts/{postId} {
+      // Anyone can read posts
+      allow read: if true;
+      
+      // Only authenticated users can create posts
+      allow create: if isSignedIn() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.caption is string
+        && request.resource.data.helpType is string
+        && request.resource.data.urgency in [0, 1]
+        && request.resource.data.location is map
+        && request.resource.data.location.lat is number
+        && request.resource.data.location.lng is number;
+      
+      // Only post owner can update their own posts (except for upvotes/donations)
+      allow update: if isSignedIn() && (
+        // Owner can update their post
+        isOwner(resource.data.userId)
+        // Anyone can upvote (increment upvoteCount, modify voters map)
+        || (request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['upvoteCount', 'voters', 'priorityScore']))
+        // Anyone can donate money (increment currentAmount)
+        || (request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['currentAmount']))
+        // Anyone can donate items (update neededItems)
+        || (request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['neededItems']))
+      );
+      
+      // Only owner can delete
+      allow delete: if isOwner(resource.data.userId);
+    }
+  }
+}
+
