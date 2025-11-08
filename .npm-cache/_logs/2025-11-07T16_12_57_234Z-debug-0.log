@@ -1,0 +1,264 @@
+0 verbose cli /opt/homebrew/Cellar/node/24.4.1/bin/node /opt/homebrew/bin/npm
+1 info using npm@11.4.2
+2 info using node@v24.4.1
+3 silly config load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/cjason/Desktop/GRAM-TEAMB/hacksmart/.npmrc
+5 silly config load:file:/Users/cjason/.npmrc
+6 silly config load:file:/opt/homebrew/etc/npmrc
+7 verbose title npm install react-router-dom@6
+8 verbose argv "install" "react-router-dom@6"
+9 verbose logfile logs-max:10 dir:/Users/cjason/Desktop/GRAM-TEAMB/.npm-cache/_logs/2025-11-07T16_12_57_234Z-
+10 verbose logfile /Users/cjason/Desktop/GRAM-TEAMB/.npm-cache/_logs/2025-11-07T16_12_57_234Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest react-router-dom@6
+15 silly packumentCache full:https://registry.npmjs.org/react-router-dom cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/react-router-dom 1691ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/react-router-dom set size:undefined disposed:false
+18 silly fetch manifest react@^19.1.1
+19 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+20 http cache https://registry.npmjs.org/react 14ms (cache hit)
+21 silly packumentCache full:https://registry.npmjs.org/react set size:6236454 disposed:false
+22 silly fetch manifest react-dom@^19.1.1
+23 silly packumentCache full:https://registry.npmjs.org/react-dom cache-miss
+24 http cache https://registry.npmjs.org/react-dom 14ms (cache hit)
+25 silly packumentCache full:https://registry.npmjs.org/react-dom set size:8158841 disposed:false
+26 silly placeDep ROOT react-router-dom@6.30.1 OK for: hacksmart@0.0.0 want: 6
+27 silly fetch manifest react-router@6.30.1
+28 silly packumentCache full:https://registry.npmjs.org/react-router cache-miss
+29 silly fetch manifest @remix-run/router@1.23.0
+30 silly packumentCache full:https://registry.npmjs.org/@remix-run%2frouter cache-miss
+31 http fetch GET 200 https://registry.npmjs.org/react-router 1126ms (cache miss)
+32 silly packumentCache full:https://registry.npmjs.org/react-router set size:undefined disposed:false
+33 http fetch GET 200 https://registry.npmjs.org/@remix-run%2frouter 1745ms (cache miss)
+34 silly packumentCache full:https://registry.npmjs.org/@remix-run%2frouter set size:undefined disposed:false
+35 silly fetch manifest react@>=16.8
+36 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+37 http cache https://registry.npmjs.org/react 10ms (cache hit)
+38 silly packumentCache full:https://registry.npmjs.org/react set size:6236454 disposed:false
+39 silly placeDep ROOT @remix-run/router@1.23.0 OK for: react-router-dom@6.30.1 want: 1.23.0
+40 silly placeDep ROOT react-router@6.30.1 OK for: react-router-dom@6.30.1 want: 6.30.1
+41 silly reify moves {}
+42 silly audit bulk request {
+42 silly audit   '@babel/code-frame': [ '7.27.1' ],
+42 silly audit   '@babel/compat-data': [ '7.28.5' ],
+42 silly audit   '@babel/core': [ '7.28.5' ],
+42 silly audit   '@babel/generator': [ '7.28.5' ],
+42 silly audit   '@babel/helper-compilation-targets': [ '7.27.2' ],
+42 silly audit   '@babel/helper-globals': [ '7.28.0' ],
+42 silly audit   '@babel/helper-module-imports': [ '7.27.1' ],
+42 silly audit   '@babel/helper-module-transforms': [ '7.28.3' ],
+42 silly audit   '@babel/helper-plugin-utils': [ '7.27.1' ],
+42 silly audit   '@babel/helper-string-parser': [ '7.27.1' ],
+42 silly audit   '@babel/helper-validator-identifier': [ '7.28.5' ],
+42 silly audit   '@babel/helper-validator-option': [ '7.27.1' ],
+42 silly audit   '@babel/helpers': [ '7.28.4' ],
+42 silly audit   '@babel/parser': [ '7.28.5' ],
+42 silly audit   '@babel/plugin-transform-react-jsx-self': [ '7.27.1' ],
+42 silly audit   '@babel/plugin-transform-react-jsx-source': [ '7.27.1' ],
+42 silly audit   '@babel/template': [ '7.27.2' ],
+42 silly audit   '@babel/traverse': [ '7.28.5' ],
+42 silly audit   '@babel/types': [ '7.28.5' ],
+42 silly audit   '@esbuild/aix-ppc64': [ '0.25.12' ],
+42 silly audit   '@esbuild/android-arm': [ '0.25.12' ],
+42 silly audit   '@esbuild/android-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/android-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/darwin-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/darwin-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/freebsd-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/freebsd-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-arm': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-ia32': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-loong64': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-mips64el': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-ppc64': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-riscv64': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-s390x': [ '0.25.12' ],
+42 silly audit   '@esbuild/linux-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/netbsd-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/netbsd-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/openbsd-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/openbsd-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/openharmony-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/sunos-x64': [ '0.25.12' ],
+42 silly audit   '@esbuild/win32-arm64': [ '0.25.12' ],
+42 silly audit   '@esbuild/win32-ia32': [ '0.25.12' ],
+42 silly audit   '@esbuild/win32-x64': [ '0.25.12' ],
+42 silly audit   '@eslint-community/eslint-utils': [ '4.9.0' ],
+42 silly audit   'eslint-visitor-keys': [ '3.4.3', '4.2.1' ],
+42 silly audit   '@eslint-community/regexpp': [ '4.12.2' ],
+42 silly audit   '@eslint/config-array': [ '0.21.1' ],
+42 silly audit   '@eslint/config-helpers': [ '0.4.2' ],
+42 silly audit   '@eslint/core': [ '0.17.0' ],
+42 silly audit   '@eslint/eslintrc': [ '3.3.1' ],
+42 silly audit   globals: [ '14.0.0', '16.5.0' ],
+42 silly audit   '@eslint/js': [ '9.39.1' ],
+42 silly audit   '@eslint/object-schema': [ '2.1.7' ],
+42 silly audit   '@eslint/plugin-kit': [ '0.4.1' ],
+42 silly audit   '@humanfs/core': [ '0.19.1' ],
+42 silly audit   '@humanfs/node': [ '0.16.7' ],
+42 silly audit   '@humanwhocodes/module-importer': [ '1.0.1' ],
+42 silly audit   '@humanwhocodes/retry': [ '0.4.3' ],
+42 silly audit   '@jridgewell/gen-mapping': [ '0.3.13' ],
+42 silly audit   '@jridgewell/remapping': [ '2.3.5' ],
+42 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+42 silly audit   '@jridgewell/sourcemap-codec': [ '1.5.5' ],
+42 silly audit   '@jridgewell/trace-mapping': [ '0.3.31' ],
+42 silly audit   '@rolldown/pluginutils': [ '1.0.0-beta.43' ],
+42 silly audit   '@rollup/rollup-android-arm-eabi': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-android-arm64': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-darwin-arm64': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-darwin-x64': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-freebsd-arm64': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-freebsd-x64': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-arm-gnueabihf': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-arm-musleabihf': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-arm64-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-arm64-musl': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-loong64-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-ppc64-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-riscv64-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-riscv64-musl': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-s390x-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-x64-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-linux-x64-musl': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-openharmony-arm64': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-win32-arm64-msvc': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-win32-ia32-msvc': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-win32-x64-gnu': [ '4.52.5' ],
+42 silly audit   '@rollup/rollup-win32-x64-msvc': [ '4.52.5' ],
+42 silly audit   '@types/babel__core': [ '7.20.5' ],
+42 silly audit   '@types/babel__generator': [ '7.27.0' ],
+42 silly audit   '@types/babel__template': [ '7.4.4' ],
+42 silly audit   '@types/babel__traverse': [ '7.28.0' ],
+42 silly audit   '@types/estree': [ '1.0.8' ],
+42 silly audit   '@types/json-schema': [ '7.0.15' ],
+42 silly audit   '@types/react': [ '19.2.2' ],
+42 silly audit   '@types/react-dom': [ '19.2.2' ],
+42 silly audit   '@vitejs/plugin-react': [ '5.1.0' ],
+42 silly audit   acorn: [ '8.15.0' ],
+42 silly audit   'acorn-jsx': [ '5.3.2' ],
+42 silly audit   ajv: [ '6.12.6' ],
+42 silly audit   'ansi-styles': [ '4.3.0' ],
+42 silly audit   argparse: [ '2.0.1' ],
+42 silly audit   'balanced-match': [ '1.0.2' ],
+42 silly audit   'baseline-browser-mapping': [ '2.8.25' ],
+42 silly audit   'brace-expansion': [ '1.1.12' ],
+42 silly audit   browserslist: [ '4.27.0' ],
+42 silly audit   callsites: [ '3.1.0' ],
+42 silly audit   'caniuse-lite': [ '1.0.30001754' ],
+42 silly audit   chalk: [ '4.1.2' ],
+42 silly audit   'color-convert': [ '2.0.1' ],
+42 silly audit   'color-name': [ '1.1.4' ],
+42 silly audit   'concat-map': [ '0.0.1' ],
+42 silly audit   'convert-source-map': [ '2.0.0' ],
+42 silly audit   'cross-spawn': [ '7.0.6' ],
+42 silly audit   csstype: [ '3.1.3' ],
+42 silly audit   debug: [ '4.4.3' ],
+42 silly audit   'deep-is': [ '0.1.4' ],
+42 silly audit   'electron-to-chromium': [ '1.5.248' ],
+42 silly audit   esbuild: [ '0.25.12' ],
+42 silly audit   escalade: [ '3.2.0' ],
+42 silly audit   'escape-string-regexp': [ '4.0.0' ],
+42 silly audit   eslint: [ '9.39.1' ],
+42 silly audit   'eslint-plugin-react-hooks': [ '5.2.0' ],
+42 silly audit   'eslint-plugin-react-refresh': [ '0.4.24' ],
+42 silly audit   'eslint-scope': [ '8.4.0' ],
+42 silly audit   espree: [ '10.4.0' ],
+42 silly audit   esquery: [ '1.6.0' ],
+42 silly audit   esrecurse: [ '4.3.0' ],
+42 silly audit   estraverse: [ '5.3.0' ],
+42 silly audit   esutils: [ '2.0.3' ],
+42 silly audit   'fast-deep-equal': [ '3.1.3' ],
+42 silly audit   'fast-json-stable-stringify': [ '2.1.0' ],
+42 silly audit   'fast-levenshtein': [ '2.0.6' ],
+42 silly audit   fdir: [ '6.5.0' ],
+42 silly audit   'file-entry-cache': [ '8.0.0' ],
+42 silly audit   'find-up': [ '5.0.0' ],
+42 silly audit   'flat-cache': [ '4.0.1' ],
+42 silly audit   flatted: [ '3.3.3' ],
+42 silly audit   fsevents: [ '2.3.3' ],
+42 silly audit   gensync: [ '1.0.0-beta.2' ],
+42 silly audit   'glob-parent': [ '6.0.2' ],
+42 silly audit   'has-flag': [ '4.0.0' ],
+42 silly audit   ignore: [ '5.3.2' ],
+42 silly audit   'import-fresh': [ '3.3.1' ],
+42 silly audit   imurmurhash: [ '0.1.4' ],
+42 silly audit   'is-extglob': [ '2.1.1' ],
+42 silly audit   'is-glob': [ '4.0.3' ],
+42 silly audit   isexe: [ '2.0.0' ],
+42 silly audit   'js-tokens': [ '4.0.0' ],
+42 silly audit   'js-yaml': [ '4.1.0' ],
+42 silly audit   jsesc: [ '3.1.0' ],
+42 silly audit   'json-buffer': [ '3.0.1' ],
+42 silly audit   'json-schema-traverse': [ '0.4.1' ],
+42 silly audit   'json-stable-stringify-without-jsonify': [ '1.0.1' ],
+42 silly audit   json5: [ '2.2.3' ],
+42 silly audit   keyv: [ '4.5.4' ],
+42 silly audit   levn: [ '0.4.1' ],
+42 silly audit   'locate-path': [ '6.0.0' ],
+42 silly audit   'lodash.merge': [ '4.6.2' ],
+42 silly audit   'lru-cache': [ '5.1.1' ],
+42 silly audit   minimatch: [ '3.1.2' ],
+42 silly audit   ms: [ '2.1.3' ],
+42 silly audit   nanoid: [ '3.3.11' ],
+42 silly audit   'natural-compare': [ '1.4.0' ],
+42 silly audit   'node-releases': [ '2.0.27' ],
+42 silly audit   optionator: [ '0.9.4' ],
+42 silly audit   'p-limit': [ '3.1.0' ],
+42 silly audit   'p-locate': [ '5.0.0' ],
+42 silly audit   'parent-module': [ '1.0.1' ],
+42 silly audit   'path-exists': [ '4.0.0' ],
+42 silly audit   'path-key': [ '3.1.1' ],
+42 silly audit   picocolors: [ '1.1.1' ],
+42 silly audit   picomatch: [ '4.0.3' ],
+42 silly audit   postcss: [ '8.5.6' ],
+42 silly audit   'prelude-ls': [ '1.2.1' ],
+42 silly audit   punycode: [ '2.3.1' ],
+42 silly audit   react: [ '19.2.0' ],
+42 silly audit   'react-dom': [ '19.2.0' ],
+42 silly audit   'react-refresh': [ '0.18.0' ],
+42 silly audit   'resolve-from': [ '4.0.0' ],
+42 silly audit   rollup: [ '4.52.5' ],
+42 silly audit   scheduler: [ '0.27.0' ],
+42 silly audit   semver: [ '6.3.1' ],
+42 silly audit   'shebang-command': [ '2.0.0' ],
+42 silly audit   'shebang-regex': [ '3.0.0' ],
+42 silly audit   'source-map-js': [ '1.2.1' ],
+42 silly audit   'strip-json-comments': [ '3.1.1' ],
+42 silly audit   'supports-color': [ '7.2.0' ],
+42 silly audit   tinyglobby: [ '0.2.15' ],
+42 silly audit   'type-check': [ '0.4.0' ],
+42 silly audit   'update-browserslist-db': [ '1.1.4' ],
+42 silly audit   'uri-js': [ '4.4.1' ],
+42 silly audit   vite: [ '7.2.2' ],
+42 silly audit   which: [ '2.0.2' ],
+42 silly audit   'word-wrap': [ '1.2.5' ],
+42 silly audit   yallist: [ '3.1.1' ],
+42 silly audit   'yocto-queue': [ '0.1.0' ],
+42 silly audit   'react-router-dom': [ '6.30.1' ],
+42 silly audit   '@remix-run/router': [ '1.23.0' ],
+42 silly audit   'react-router': [ '6.30.1' ]
+42 silly audit }
+43 http cache @remix-run/router@https://registry.npmjs.org/@remix-run/router/-/router-1.23.0.tgz 0ms (cache hit)
+44 http cache react-router@https://registry.npmjs.org/react-router/-/react-router-6.30.1.tgz 0ms (cache hit)
+45 silly tarball no local data for @remix-run/router@https://registry.npmjs.org/@remix-run/router/-/router-1.23.0.tgz. Extracting by manifest.
+46 silly tarball no local data for react-router@https://registry.npmjs.org/react-router/-/react-router-6.30.1.tgz. Extracting by manifest.
+47 http cache react-router-dom@https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.30.1.tgz 0ms (cache hit)
+48 silly tarball no local data for react-router-dom@https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.30.1.tgz. Extracting by manifest.
+49 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 187ms
+50 silly audit report {}
+51 http fetch GET 200 https://registry.npmjs.org/@remix-run/router/-/router-1.23.0.tgz 1741ms (cache miss)
+52 http fetch GET 200 https://registry.npmjs.org/react-router/-/react-router-6.30.1.tgz 2942ms (cache miss)
+53 http fetch GET 200 https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.30.1.tgz 3278ms (cache miss)
+54 silly ADD node_modules/react-router
+55 silly ADD node_modules/@remix-run/router
+56 silly ADD node_modules/react-router-dom
+57 verbose cwd /Users/cjason/Desktop/GRAM-TEAMB/hacksmart
+58 verbose os Darwin 24.6.0
+59 verbose node v24.4.1
+60 verbose npm  v11.4.2
+61 verbose exit 0
+62 info ok
