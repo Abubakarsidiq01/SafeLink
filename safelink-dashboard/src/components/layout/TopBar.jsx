@@ -15,6 +15,8 @@ export default function TopBar() {
         return "Rescue Log";
       case "/first-aid":
         return "AI First Aid Guide";
+      case "/relief-feed":
+        return "Relief & Donation Feed";
       case "/settings":
         return "Settings";
       default:
@@ -30,6 +32,8 @@ export default function TopBar() {
         return "Complete history of all rescue events and operations.";
       case "/first-aid":
         return "Get AI-powered first aid instructions based on your situation. Supports multiple languages with voice input.";
+      case "/relief-feed":
+        return "Browse and contribute to relief efforts in your area. Donate money, items, or upvote urgent requests.";
       case "/settings":
         return "Configure your SafeLink Mesh AI dashboard.";
       default:

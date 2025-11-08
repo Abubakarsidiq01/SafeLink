@@ -8,13 +8,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.7",
+    "axios": "^1.6.0",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.5.0",
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "axios": "^1.6.0",
-    "react-router-dom": "^6.20.0",
     "react-leaflet": "^4.2.1",
-    "leaflet": "^1.9.4",
-    "recharts": "^2.10.0"
+    "react-router-dom": "^6.20.0",
+    "recharts": "^2.10.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
@@ -23,4 +27,3 @@
     "vite": "^5.0.8"
   }
 }
-

@@ -7,7 +7,6 @@ import RescueStatsCards from "../components/dashboard/RescueStatsCards";
 import RescueMap from "../components/dashboard/RescueMap";
 import RescueTable from "../components/dashboard/RescueTable";
 import RescueDetailModal from "../components/dashboard/RescueDetailModal";
-import RequestHelpModal from "../components/dashboard/RequestHelpModal";
 import ActionRequiredSection from "../components/dashboard/ActionRequiredSection";
 import "./Dashboard.css";
 
@@ -19,7 +18,6 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [selectedRescue, setSelectedRescue] = useState(null);
   const [volunteerLocation, setVolunteerLocation] = useState(null);
-  const [showRequestHelpModal, setShowRequestHelpModal] = useState(false);
 
   const load = async () => {
     try {
@@ -107,17 +105,6 @@ export default function Dashboard() {
     }
   }, []);
 
-  // Listen for request help modal trigger from sidebar
-  useEffect(() => {
-    const handleOpenRequestHelp = () => {
-      setShowRequestHelpModal(true);
-    };
-
-    window.addEventListener("openRequestHelp", handleOpenRequestHelp);
-    return () => {
-      window.removeEventListener("openRequestHelp", handleOpenRequestHelp);
-    };
-  }, []);
 
   const handleRowClick = (rescue) => {
     setSelectedRescue(rescue);
@@ -150,14 +137,6 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div className="dashboard__headerActions">
-        <button
-          className="dashboard__requestHelpBtn"
-          onClick={() => setShowRequestHelpModal(true)}
-        >
-          <span>🆘</span> Request Help
-        </button>
-      </div>
 
       {pendingRequests.length > 0 && (
         <ActionRequiredSection requests={pendingRequests} onRequestClick={handleRowClick} />
@@ -175,15 +154,6 @@ export default function Dashboard() {
           onClose={handleCloseModal}
           volunteerLocation={volunteerLocation}
           onStatusUpdate={load}
-        />
-      )}
-
-      {showRequestHelpModal && (
-        <RequestHelpModal
-          onClose={() => setShowRequestHelpModal(false)}
-          onSuccess={() => {
-            load(); // Refresh data after successful request
-          }}
         />
       )}
     </div>

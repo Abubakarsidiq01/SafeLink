@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
-export default function Sidebar() {
+export default function Sidebar({ onRequestHelp, onStatusUpdate }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,7 +42,13 @@ export default function Sidebar() {
           className={`sidebar__item ${isActive("/first-aid") ? "sidebar__item--active" : ""}`}
           onClick={() => navigate("/first-aid")}
         >
-          🩹 First Aid Guide
+          First Aid Guide
+        </button>
+        <button
+          className={`sidebar__item ${isActive("/relief-feed") ? "sidebar__item--active" : ""}`}
+          onClick={() => navigate("/relief-feed")}
+        >
+          Relief/Donation Feed
         </button>
         
         <div className="sidebar__sectionTitle" style={{ marginTop: "24px" }}>
@@ -50,18 +56,13 @@ export default function Sidebar() {
         </div>
         <button
           className="sidebar__item sidebar__item--action"
-          onClick={() => {
-            // This will be handled by the parent component
-            window.dispatchEvent(new CustomEvent("openRequestHelp"));
-          }}
+          onClick={onRequestHelp}
         >
           Request Help
         </button>
         <button
           className="sidebar__item sidebar__item--action"
-          onClick={() => {
-            window.dispatchEvent(new CustomEvent("openStatusUpdate"));
-          }}
+          onClick={onStatusUpdate}
         >
           Status Update
         </button>

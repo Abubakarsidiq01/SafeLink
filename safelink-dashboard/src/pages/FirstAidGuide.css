@@ -2,28 +2,6 @@
   padding: 0;
 }
 
-.firstAidGuide__header {
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.firstAidGuide__title {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.5px;
-}
-
-.firstAidGuide__subtitle {
-  margin: 6px 0 0;
-  font-size: 14px;
-  color: #64748b;
-  font-weight: 400;
-  line-height: 1.5;
-}
-
 .firstAidGuide__content {
   display: flex;
   flex-direction: column;

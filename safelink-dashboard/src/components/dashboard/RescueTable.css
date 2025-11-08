@@ -36,6 +36,7 @@
   letter-spacing: 0.5px;
   padding: 14px;
   border-bottom: 2px solid #e2e8f0;
+  font-family: "Lexend Deca", sans-serif;
 }
 
 .rescueTable tbody tr {
@@ -88,6 +89,9 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+  font-family: "Lexend Deca", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .rescueTable__actionBtn:hover {
@@ -139,6 +143,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
+  font-family: "Lexend Deca", sans-serif;
 }
 
 .priorityBadge--critical {

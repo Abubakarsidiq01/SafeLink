@@ -37,6 +37,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 8px;
+  font-family: "Lexend Deca", sans-serif;
 }
 
 .statCard--primary .statCard__label {
@@ -49,6 +50,8 @@
   margin-top: 4px;
   color: #0f172a;
   line-height: 1.2;
+  font-family: "Lexend Deca", sans-serif;
+  letter-spacing: -0.5px;
 }
 
 .statCard--primary .statCard__value {

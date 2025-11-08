@@ -154,15 +154,6 @@ export default function FirstAidGuide() {
 
   return (
     <div className="firstAidGuide">
-      <div className="firstAidGuide__header">
-        <div>
-          <h1 className="firstAidGuide__title">🩹 AI First Aid Guide</h1>
-          <p className="firstAidGuide__subtitle">
-            Get step-by-step first aid instructions based on your situation. Speak or type in any language.
-          </p>
-        </div>
-      </div>
-
       <div className="firstAidGuide__content">
         <div className="firstAidGuide__inputSection">
           <div className="inputCard">
