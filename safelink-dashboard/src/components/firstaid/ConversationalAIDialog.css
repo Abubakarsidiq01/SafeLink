@@ -24,6 +24,7 @@
   font-size: 18px;
   font-weight: 700;
   color: #0f172a;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .conversationalDialog__close {
@@ -105,6 +106,7 @@
   font-size: 14px;
   line-height: 1.6;
   white-space: pre-line;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .conversationalDialog__message--ai .conversationalDialog__text {
@@ -146,6 +148,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .conversationalDialog__button--listen {
@@ -203,6 +206,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .conversationalDialog__quickButton:hover {

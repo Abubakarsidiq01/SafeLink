@@ -2,6 +2,27 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.findShelter::-webkit-scrollbar {
+  width: 10px;
+}
+
+.findShelter::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.findShelter::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+.findShelter::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Header */

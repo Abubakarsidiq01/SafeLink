@@ -84,6 +84,7 @@
   font-size: 24px;
   font-weight: 700;
   color: white;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .rescueModal__subtitle {
@@ -125,6 +126,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 6px;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .infoCard__value {
@@ -212,6 +214,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .btn--primary {

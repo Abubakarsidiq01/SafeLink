@@ -2,6 +2,27 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.rescueLog::-webkit-scrollbar {
+  width: 10px;
+}
+
+.rescueLog::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.rescueLog::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+.rescueLog::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .rescueLog__header {
@@ -13,6 +34,7 @@
   font-size: 24px;
   color: #0f172a;
   font-weight: 700;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .rescueLog__subtitle {
@@ -91,13 +113,13 @@
 }
 
 .logTable__id {
-  font-family: "Courier New", monospace;
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Courier New", monospace;
   font-size: 12px;
   color: #6b7280;
 }
 
 .logTable__location {
-  font-family: "Courier New", monospace;
+  font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Courier New", monospace;
   font-size: 11px;
   color: #6b7280;
 }
@@ -150,6 +172,7 @@
   background: #0f172a;
   color: #e5e7eb;
   cursor: pointer;
+  font-family: "Lexend Deca", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 13px;
 }
 
