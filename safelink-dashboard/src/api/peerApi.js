@@ -1,28 +1,29 @@
 // src/api/peerApi.js
 
 import axios from "axios";
-import { API_BASE_URL } from "../config/api.js";
+
+const API_BASE = "http://localhost:4000/api";
 
 export async function fetchPeers(activeOnly = false) {
   const url = activeOnly 
-    ? `${API_BASE_URL}/peers?active=true`
-    : `${API_BASE_URL}/peers`;
+    ? `${API_BASE}/peers?active=true`
+    : `${API_BASE}/peers`;
   const res = await axios.get(url);
   return res.data.peers || [];
 }
 
 export async function fetchPeerById(id) {
-  const res = await axios.get(`${API_BASE_URL}/peers/${id}`);
+  const res = await axios.get(`${API_BASE}/peers/${id}`);
   return res.data.peer;
 }
 
 export async function registerPeer(peerData) {
-  const res = await axios.post(`${API_BASE_URL}/peers`, peerData);
+  const res = await axios.post(`${API_BASE}/peers`, peerData);
   return res.data.peer;
 }
 
 export async function sendDirectMessage(messageData) {
-  const res = await axios.post(`${API_BASE_URL}/messages`, messageData);
+  const res = await axios.post(`${API_BASE}/messages`, messageData);
   return res.data.message;
 }
 
@@ -31,7 +32,7 @@ export async function fetchMessages(recipientId = null, senderId = null) {
   if (recipientId) params.append("recipientId", recipientId);
   if (senderId) params.append("senderId", senderId);
   
-  const url = `${API_BASE_URL}/messages${params.toString() ? `?${params.toString()}` : ""}`;
+  const url = `${API_BASE}/messages${params.toString() ? `?${params.toString()}` : ""}`;
   const res = await axios.get(url);
   return res.data.messages || [];
 }

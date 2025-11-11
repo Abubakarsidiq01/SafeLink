@@ -23,13 +23,11 @@
   background: #94a3b8;
 }
 
-.nearbyDevices__header {
+.nearbyDevices__actions {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 12px;
   margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e2e8f0;
 }
 
 .nearbyDevices__title {

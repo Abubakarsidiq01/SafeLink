@@ -61,13 +61,6 @@ export default function RescueLog() {
 
   return (
     <div className="rescueLog">
-      <div className="rescueLog__header">
-        <h2>Rescue Log</h2>
-        <p className="rescueLog__subtitle">
-          Complete history of all rescue operations ({rescues.length} total events)
-        </p>
-      </div>
-
       <div className="rescueLog__filters">
         <button
           className={`filterBtn ${filter === "all" ? "filterBtn--active" : ""}`}

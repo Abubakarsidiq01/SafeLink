@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./FindShelter.css";
 
-import { API_BASE } from "../config/api.js";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000";
 
 export default function FindShelter() {
   const [text, setText] = useState("");
@@ -83,7 +83,7 @@ export default function FindShelter() {
     }
   };
 
-  // Voice Input
+  // Voice Input with Voice Activity Detection
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -92,9 +92,76 @@ export default function FindShelter() {
       setRecording(true);
       setError("");
 
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      // Voice Activity Detection using Web Audio API
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      const microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
+      
+      analyser.fftSize = 256;
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      
+      let silenceStartTime = null;
+      const SILENCE_THRESHOLD = 20; // Adjust based on testing
+      const SILENCE_DURATION = 1500; // Stop after 1.5 seconds of silence
+      let lastSoundTime = Date.now();
+      let isActive = true;
+      
+      const checkVoiceActivity = () => {
+        if (!isActive || mediaRecorder.state !== "recording") return;
+        
+        analyser.getByteFrequencyData(dataArray);
+        const average = dataArray.reduce((a, b) => a + b) / bufferLength;
+        
+        if (average > SILENCE_THRESHOLD) {
+          // Sound detected
+          lastSoundTime = Date.now();
+          silenceStartTime = null;
+        } else {
+          // Silence detected
+          if (silenceStartTime === null) {
+            silenceStartTime = Date.now();
+          }
+          
+          const silenceDuration = Date.now() - silenceStartTime;
+          if (silenceDuration >= SILENCE_DURATION && Date.now() - lastSoundTime >= SILENCE_DURATION) {
+            // Stop recording after silence
+            isActive = false;
+            if (mediaRecorder.state === "recording") {
+              mediaRecorder.stop();
+            }
+            audioContext.close();
+            return;
+          }
+        }
+        
+        if (isActive) {
+          requestAnimationFrame(checkVoiceActivity);
+        }
+      };
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
 
       mediaRecorder.onstop = async () => {
+        isActive = false;
+        setRecording(false);
+        stream.getTracks().forEach((t) => t.stop());
+        try {
+          audioContext.close();
+        } catch (e) {
+          // Ignore if already closed
+        }
+        
+        if (chunks.length === 0) {
+          setError("No audio recorded. Please try again.");
+          return;
+        }
+
         const blob = new Blob(chunks, { type: "audio/webm" });
         const formData = new FormData();
         formData.append("file", blob, "input.webm");
@@ -127,19 +194,19 @@ export default function FindShelter() {
           console.error("Error processing audio:", err);
           setError("Failed to process audio. Please try again.");
           setLoading(false);
-        } finally {
-          setRecording(false);
-          stream.getTracks().forEach((t) => t.stop());
         }
       };
 
       mediaRecorder.start();
-
+      checkVoiceActivity();
+      
+      // Safety timeout - stop after 30 seconds max
       setTimeout(() => {
         if (mediaRecorder.state === "recording") {
           mediaRecorder.stop();
+          audioContext.close();
         }
-      }, 5000);
+      }, 30000);
     } catch (err) {
       console.error("Error accessing microphone:", err);
       setError("Microphone access denied. Please enable microphone permissions.");
@@ -209,21 +276,6 @@ export default function FindShelter() {
 
     return (
       <div className="findShelter">
-        <div className="findShelter__header">
-          <div className="findShelter__headerContent">
-            <h2 className="findShelter__title">{getIntentLabel()} Found</h2>
-            <p className="findShelter__subtitle">
-              {intent === "hospital"
-                ? "Nearest medical facility with directions"
-                : intent === "police"
-                ? "Nearest police station. For immediate emergencies, call 911."
-                : "Nearest safe location for shelter"}
-            </p>
-          </div>
-          <button onClick={handleStartOver} className="findShelter__backBtn">
-            New Search
-          </button>
-        </div>
 
         {intent === "police" && (
           <div className="findShelter__emergencyAlert">
@@ -232,6 +284,12 @@ export default function FindShelter() {
             </div>
           </div>
         )}
+
+        <div className="findShelter__actions">
+          <button onClick={handleStartOver} className="findShelter__backBtn">
+            New Search
+          </button>
+        </div>
 
         <div className="findShelter__grid">
           {/* Map */}

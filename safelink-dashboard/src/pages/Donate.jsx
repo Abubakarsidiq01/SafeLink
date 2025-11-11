@@ -66,13 +66,6 @@ export default function Donate() {
   return (
     <div className="donate">
       <div className="donate__container">
-        <div className="donate__header">
-          <h1 className="donate__title">Make a Donation</h1>
-          <p className="donate__subtitle">
-            Your contribution supports relief efforts and helps those in need across the SafeLink network.
-          </p>
-        </div>
-
         <div className="donate__content">
           <div className="donate__card">
             <form onSubmit={handleSubmit} className="donate__form">

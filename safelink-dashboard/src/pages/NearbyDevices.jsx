@@ -100,13 +100,7 @@ export default function NearbyDevices() {
 
   return (
     <div className="nearbyDevices">
-      <div className="nearbyDevices__header">
-        <div>
-          <h1 className="nearbyDevices__title">Nearby Devices</h1>
-          <p className="nearbyDevices__subtitle">
-            Discover and connect with devices in your mesh network. Send direct messages to any device.
-          </p>
-        </div>
+      <div className="nearbyDevices__actions">
         <button
           className="nearbyDevices__refreshBtn"
           onClick={loadPeers}

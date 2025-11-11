@@ -1,10 +1,11 @@
 // src/api/firstAidApi.js
 
 import axios from "axios";
-import { API_BASE_URL } from "../config/api.js";
+
+const API_BASE = "http://localhost:4000/api";
 
 export async function getFirstAidInstructions(description, includeImages = true) {
-  const res = await axios.post(`${API_BASE_URL}/first-aid`, {
+  const res = await axios.post(`${API_BASE}/first-aid`, {
     description,
     includeImages,
   });

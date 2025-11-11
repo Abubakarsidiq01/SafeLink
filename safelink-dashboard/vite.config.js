@@ -4,25 +4,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: process.env.PORT || 3001,
-    host: '0.0.0.0',
+    port: 5173,
+    host: 'localhost',
     open: false
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: false,
-    minify: 'terser',
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth'],
-        },
-      },
-    },
-  },
-  define: {
-    'process.env': {},
-  },
+  }
 })
 

@@ -15,80 +15,10 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
   const [speechError, setSpeechError] = useState(null);
   const [isGettingLocation, setIsGettingLocation] = useState(true);
   const recognitionRef = useRef(null);
+  const silenceTimeoutRef = useRef(null);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
 
   useEffect(() => {
-    // Check if speech recognition is supported
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      setIsSpeechSupported(true);
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = "en-US";
-
-      recognition.onstart = () => {
-        setIsListening(true);
-        setSpeechError(null);
-      };
-
-      recognition.onresult = (event) => {
-        let interimTranscript = "";
-        let finalTranscript = "";
-
-        // Process all results from the current event
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript + " ";
-          } else {
-            interimTranscript += transcript;
-          }
-        }
-
-        setMessage((prev) => {
-          // Get the base message (without any listening indicators)
-          let baseMessage = prev.replace(/\[Listening\.\.\.\]/g, "").trim();
-          
-          // Add final transcripts
-          if (finalTranscript) {
-            baseMessage += (baseMessage ? " " : "") + finalTranscript.trim();
-          }
-          
-          // Add interim transcript with indicator
-          if (interimTranscript) {
-            baseMessage += (baseMessage ? " " : "") + interimTranscript + " [Listening...]";
-          }
-          
-          return baseMessage;
-        });
-      };
-
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error:", event.error);
-        setIsListening(false);
-        if (event.error === "no-speech") {
-          setSpeechError("No speech detected. Please try again.");
-        } else if (event.error === "audio-capture") {
-          setSpeechError("No microphone found. Please check your microphone.");
-        } else if (event.error === "not-allowed") {
-          setSpeechError("Microphone permission denied. Please enable microphone access.");
-        } else {
-          setSpeechError("Speech recognition error. Please try typing instead.");
-        }
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        // Clean up [Listening...] text
-        setMessage((prev) => prev.replace(/\[Listening\.\.\.\]/g, "").trim());
-      };
-
-      recognitionRef.current = recognition;
-    } else {
-      setIsSpeechSupported(false);
-    }
-
     // Get fresh location function
     const getLocation = async (showLoading = false) => {
       if (showLoading) setLocationError(null);
@@ -213,10 +143,92 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
     // Store watch ID for cleanup
     const watchIdRef = { current: locationWatchId };
 
+    // Initialize speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setIsSpeechSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setSpeechError(null);
+      };
+
+      recognition.onresult = (event) => {
+        let interimTranscript = "";
+        let finalTranscript = "";
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript + " ";
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        setMessage((prev) => {
+          let baseMessage = prev.replace(/\[Listening\.\.\.\]/g, "").trim();
+          if (finalTranscript) {
+            baseMessage += (baseMessage ? " " : "") + finalTranscript.trim();
+          }
+          if (interimTranscript) {
+            baseMessage += (baseMessage ? " " : "") + interimTranscript + " [Listening...]";
+          }
+          return baseMessage;
+        });
+
+        // Reset silence timeout when speech is detected
+        if (silenceTimeoutRef.current) {
+          clearTimeout(silenceTimeoutRef.current);
+        }
+        
+        // Auto-stop after 2 seconds of silence (no new results)
+        silenceTimeoutRef.current = setTimeout(() => {
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+          }
+        }, 2000);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
+        if (event.error === "no-speech") {
+          // This is normal when user stops talking
+          setSpeechError(null);
+        } else if (event.error === "audio-capture") {
+          setSpeechError("No microphone found. Please check your microphone.");
+        } else if (event.error === "not-allowed") {
+          setSpeechError("Microphone permission denied. Please enable microphone access.");
+        } else {
+          setSpeechError("Speech recognition error. Please try typing instead.");
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+        setMessage((prev) => prev.replace(/\[Listening\.\.\.\]/g, "").trim());
+        if (silenceTimeoutRef.current) {
+          clearTimeout(silenceTimeoutRef.current);
+        }
+      };
+
+      recognitionRef.current = recognition;
+    } else {
+      setIsSpeechSupported(false);
+    }
+
     // Cleanup on unmount
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
+      }
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
       }
       if (watchIdRef.current && navigator.geolocation) {
         navigator.geolocation.clearWatch(watchIdRef.current);
@@ -231,20 +243,21 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
     }
 
     if (isListening) {
-      // Stop listening
+      // Stop listening manually
       try {
         recognitionRef.current.stop();
       } catch (err) {
         console.error("Error stopping recognition:", err);
       }
       setIsListening(false);
-      // Clean up any listening indicators
       setMessage((prev) => prev.replace(/\[Listening\.\.\.\]/g, "").trim());
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
     } else {
       // Start listening
       setSpeechError(null);
       try {
-        // Clear any previous listening text
         setMessage((prev) => prev.replace(/\[Listening\.\.\.\]/g, "").trim());
         recognitionRef.current.start();
       } catch (err) {
@@ -322,21 +335,27 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
     // Stop listening if active
     if (isListening && recognitionRef.current) {
       recognitionRef.current.stop();
+      setIsListening(false);
     }
     
-    // Get fresh location before submitting
+    // Get fresh location before submitting (with timeout)
     setIsGettingLocation(true);
     let freshLocation = location;
     
     if (navigator.geolocation) {
       try {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0,
-          });
-        });
+        const position = await Promise.race([
+          new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: true,
+              timeout: 5000, // Reduced timeout
+              maximumAge: 0,
+            });
+          }),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("Location timeout")), 5000)
+          )
+        ]);
         freshLocation = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -344,6 +363,12 @@ export default function RequestHelpModal({ onClose, onSuccess }) {
         setLocation(freshLocation);
       } catch (err) {
         console.error("Error getting fresh location:", err);
+        // Use existing location if available
+        if (!freshLocation) {
+          setError("Could not get location. Please enable location access and try again.");
+          setIsGettingLocation(false);
+          return;
+        }
       }
     }
     
