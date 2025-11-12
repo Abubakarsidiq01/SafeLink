@@ -13,11 +13,15 @@ import "./Dashboard.css";
 export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [rescues, setRescues] = useState([]);
+  const [filteredRescues, setFilteredRescues] = useState([]);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedRescue, setSelectedRescue] = useState(null);
   const [volunteerLocation, setVolunteerLocation] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const load = async () => {
     try {
@@ -68,6 +72,7 @@ export default function Dashboard() {
       });
       
       setRescues(allRescues);
+      setFilteredRescues(allRescues);
       setPendingRequests(p || []);
     } catch (err) {
       console.error("Dashboard error:", err);
@@ -82,6 +87,35 @@ export default function Dashboard() {
     const id = setInterval(load, 10_000); // refresh every 10s
     return () => clearInterval(id);
   }, []);
+
+  // Filter rescues based on search and filters
+  useEffect(() => {
+    let filtered = [...rescues];
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (r) =>
+          r.natureOfHelp?.toLowerCase().includes(query) ||
+          r.message?.toLowerCase().includes(query) ||
+          r.address?.toLowerCase().includes(query) ||
+          r.type?.toLowerCase().includes(query)
+      );
+    }
+
+    // Priority filter
+    if (priorityFilter !== "all") {
+      filtered = filtered.filter((r) => r.priority === priorityFilter);
+    }
+
+    // Status filter
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((r) => r.status === statusFilter);
+    }
+
+    setFilteredRescues(filtered);
+  }, [rescues, searchQuery, priorityFilter, statusFilter]);
 
   // Get volunteer's current location
   useEffect(() => {
@@ -143,9 +177,57 @@ export default function Dashboard() {
 
       <RescueStatsCards stats={stats} />
       
+      {/* Search and Filters */}
+      <div className="dashboard__filters">
+        <div className="dashboard__search">
+          <input
+            type="text"
+            placeholder="Search rescues, locations, or messages..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="dashboard__searchInput"
+          />
+        </div>
+        <div className="dashboard__filterGroup">
+          <select
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+            className="dashboard__filter"
+          >
+            <option value="all">All Priorities</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Normal">Normal</option>
+          </select>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="dashboard__filter"
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="fulfilled">Fulfilled</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          {(searchQuery || priorityFilter !== "all" || statusFilter !== "all") && (
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setPriorityFilter("all");
+                setStatusFilter("all");
+              }}
+              className="dashboard__clearFilters"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+      </div>
+      
       <div className="dashboard__grid">
-        <RescueMap rescues={rescues} onMarkerClick={handleRowClick} />
-        <RescueTable rescues={rescues} onRowClick={handleRowClick} />
+        <RescueMap rescues={filteredRescues} onMarkerClick={handleRowClick} />
+        <RescueTable rescues={filteredRescues} onRowClick={handleRowClick} />
       </div>
       
       {selectedRescue && (

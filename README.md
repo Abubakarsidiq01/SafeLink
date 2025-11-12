@@ -189,7 +189,10 @@ VITE_API_BASE=http://localhost:4000
 
 ```powershell
 # Windows PowerShell
-.\START_ALL_SERVICES.ps1
+.\scripts\START_ALL_SERVICES.ps1
+
+# Or use npm script
+npm start
 ```
 
 This single command will:
@@ -216,7 +219,10 @@ npm run dev
 ### Stop All Services
 
 ```powershell
-.\STOP_ALL_SERVICES.ps1
+.\scripts\STOP_ALL_SERVICES.ps1
+
+# Or use npm script
+npm run stop
 ```
 
 ## 📖 Usage Guide
@@ -402,8 +408,11 @@ GRAM-TEAMB/
 │   ├── peers.json
 │   └── rescueLogs.json
 │
-├── START_ALL_SERVICES.ps1  # Start all services
-├── STOP_ALL_SERVICES.ps1   # Stop all services
+├── scripts/                # Utility scripts
+│   ├── START_ALL_SERVICES.ps1  # Start all services
+│   ├── STOP_ALL_SERVICES.ps1    # Stop all services
+│   ├── START_APP.ps1            # Start mobile app
+│   └── push-to-github.ps1       # Git push helper
 └── README.md               # This file
 ```
 

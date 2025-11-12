@@ -1,0 +1,475 @@
+.disasterManagement {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100%;
+  padding-bottom: 48px;
+}
+
+.disasterManagement__tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.disasterManagement__tab {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 16px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -2px;
+}
+
+.disasterManagement__tab:hover {
+  color: #0f172a;
+}
+
+.disasterManagement__tab--active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+.disasterManagement__content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.disasterManagement__section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.disasterManagement__sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.disasterManagement__sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.disasterManagement__refreshBtn {
+  padding: 8px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__refreshBtn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.disasterManagement__refreshBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.disasterManagement__progress {
+  margin-bottom: 24px;
+}
+
+.disasterManagement__progressBar {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.disasterManagement__progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+  transition: width 0.3s;
+}
+
+.disasterManagement__progressText {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.disasterManagement__checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.disasterManagement__checklistItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__checklistItem:hover {
+  background: #f1f5f9;
+}
+
+.disasterManagement__checklistItem input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.disasterManagement__alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.disasterManagement__alert {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #ffffff;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+}
+
+.disasterManagement__alert:last-child {
+  margin-bottom: 0;
+}
+
+.disasterManagement__alertIcon {
+  font-size: 24px;
+}
+
+.disasterManagement__alertHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.disasterManagement__alertContent h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  flex: 1;
+}
+
+.disasterManagement__alertSeverity {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.disasterManagement__alertContent p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.disasterManagement__alertMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.disasterManagement__alertTime,
+.disasterManagement__alertEnd,
+.disasterManagement__alertSource {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.disasterManagement__alertSource {
+  font-style: italic;
+}
+
+.disasterManagement__empty {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+}
+
+.disasterManagement__mapContainer {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  position: relative;
+  z-index: 0;
+}
+
+.disasterManagement__mapContainer .leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.disasterManagement__mapPlaceholder {
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+.disasterManagement__routes {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.disasterManagement__routeBtn {
+  padding: 12px 24px;
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__routeBtn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.disasterManagement__updateForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.disasterManagement__statusSelect {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.disasterManagement__updateInput {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.disasterManagement__updateBtn {
+  padding: 12px 24px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__updateBtn:hover {
+  background: #059669;
+}
+
+.disasterManagement__resources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.disasterManagement__resourceBtn {
+  padding: 16px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__resourceBtn:hover {
+  background: #f1f5f9;
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.disasterManagement__damageForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.disasterManagement__label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.disasterManagement__select,
+.disasterManagement__textarea {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.disasterManagement__textarea {
+  resize: vertical;
+}
+
+.disasterManagement__fileInput {
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.disasterManagement__submitBtn {
+  padding: 12px 24px;
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__submitBtn:hover {
+  background: #2563eb;
+}
+
+.disasterManagement__recoveryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.disasterManagement__recoveryCard {
+  padding: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.disasterManagement__recoveryCard h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.disasterManagement__recoveryCard p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.disasterManagement__recoveryBtn {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__recoveryBtn:hover {
+  background: #2563eb;
+}
+
+.disasterManagement__support {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.disasterManagement__supportBtn {
+  padding: 12px 24px;
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.disasterManagement__supportBtn:hover {
+  background: #059669;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .disasterManagement {
+    padding: 16px;
+  }
+
+  .disasterManagement__tabs {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .disasterManagement__tab {
+    border-bottom: 1px solid #e2e8f0;
+    border-left: 3px solid transparent;
+    margin-bottom: 0;
+  }
+
+  .disasterManagement__tab--active {
+    border-left-color: #3b82f6;
+    border-bottom-color: #e2e8f0;
+  }
+}
+

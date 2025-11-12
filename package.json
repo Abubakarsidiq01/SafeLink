@@ -1,31 +1,26 @@
 {
-  "name": "safelink-mesh-ai-root",
+  "name": "safelink-mesh-ai",
   "version": "1.0.0",
-  "description": "SafeLink Mesh AI - Offline mesh networking with AI-powered routing",
+  "description": "SafeLink Mesh AI - Offline mesh networking with AI-powered routing for emergency communications",
   "type": "module",
+  "private": true,
+  "workspaces": [
+    "server",
+    "safelink-dashboard",
+    "app"
+  ],
   "scripts": {
-    "test:discovery": "node app/tests/runSimulation.js",
-    "test:router": "node app/tests/testRouterAI.standalone.js",
-    "test:sync": "node app/tests/testSyncManager.js",
-    "test:secure": "node app/tests/testSecureMessaging.js",
-    "dashboard": "node app/tests/localDashboard.js"
-  },
-  "dependencies": {
-    "axios": "^1.13.2",
-    "chalk": "^5.3.0",
-    "crypto-js": "^4.2.0",
-    "leaflet": "^1.9.4",
-    "react-leaflet": "^5.0.0",
-    "react-router-dom": "^7.9.5",
-    "recharts": "^3.3.0",
-    "uuid": "^10.0.0"
+    "start": "scripts\\start.bat",
+    "stop": "scripts\\stop.bat",
+    "start:app": "scripts\\start-app.bat"
   },
   "keywords": [
     "mesh-network",
     "offline",
     "p2p",
     "encryption",
-    "react-native"
+    "react-native",
+    "emergency-communications"
   ],
   "author": "SafeLink Team",
   "license": "MIT"

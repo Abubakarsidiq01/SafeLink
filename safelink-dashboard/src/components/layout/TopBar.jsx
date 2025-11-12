@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useLocation } from "react-router-dom";
+import ConnectionStatus from "../common/ConnectionStatus";
 import "./TopBar.css";
 
 export default function TopBar() {
@@ -21,6 +22,10 @@ export default function TopBar() {
         return "Find Shelter";
       case "/donate":
         return "Donate Money";
+      case "/disaster-management":
+        return "Disaster Management";
+      case "/location-updates":
+        return "Location Updates";
       case "/settings":
         return "Settings";
       default:
@@ -42,6 +47,10 @@ export default function TopBar() {
         return "Find nearby shelters, hospitals, and safe places during emergencies. Get directions and route information.";
       case "/donate":
         return "Make a general donation to support relief efforts. Your contribution helps those in need across the network.";
+      case "/disaster-management":
+        return "Pre, during, and post-disaster management tools. Preparedness checklists, real-time updates, and recovery resources.";
+      case "/location-updates":
+        return "Share and view real-time location status updates from your community. See what's happening around you.";
       case "/settings":
         return "Configure your SafeLink Mesh AI dashboard.";
       default:
@@ -58,6 +67,7 @@ export default function TopBar() {
         </p>
       </div>
       <div className="topbar__right">
+        <ConnectionStatus />
         <div className="topbar__pill">
           <span className="topbar__statusDot" />
           Live updating

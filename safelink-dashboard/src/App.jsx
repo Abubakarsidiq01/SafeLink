@@ -11,13 +11,20 @@ import FirstAidGuide from "./pages/FirstAidGuide";
 import ReliefFeed from "./pages/ReliefFeed";
 import FindShelter from "./pages/FindShelter";
 import Donate from "./pages/Donate";
+import Settings from "./pages/Settings";
+import DisasterManagement from "./pages/DisasterManagement";
+import LocationUpdates from "./pages/LocationUpdates";
 import RequestHelpModal from "./components/dashboard/RequestHelpModal";
 import StatusUpdateModal from "./components/dashboard/StatusUpdateModal";
+import SOSButton from "./components/emergency/SOSButton";
+import NotificationToast from "./components/common/NotificationToast";
+import useNotifications from "./hooks/useNotifications";
 import "./App.css";
 
 function AppContent() {
   const [showRequestHelpModal, setShowRequestHelpModal] = useState(false);
   const [showStatusUpdateModal, setShowStatusUpdateModal] = useState(false);
+  const { notifications, addNotification, removeNotification } = useNotifications();
 
   return (
     <div className="appShell">
@@ -36,12 +43,9 @@ function AppContent() {
             <Route path="/relief-feed" element={<ReliefFeed />} />
             <Route path="/find-shelter" element={<FindShelter />} />
             <Route path="/donate" element={<Donate />} />
-            <Route path="/settings" element={
-              <div className="pagePlaceholder">
-                <h2>Settings</h2>
-                <p>Settings page coming soon...</p>
-              </div>
-            } />
+            <Route path="/disaster-management" element={<DisasterManagement />} />
+            <Route path="/location-updates" element={<LocationUpdates />} />
+            <Route path="/settings" element={<Settings />} />
           </Routes>
         </div>
       </main>
@@ -51,7 +55,7 @@ function AppContent() {
           onClose={() => setShowRequestHelpModal(false)}
           onSuccess={() => {
             setShowRequestHelpModal(false);
-            window.location.reload(); // Refresh to show new request
+            addNotification("Help request submitted successfully! Volunteers will be notified.", "success");
           }}
         />
       )}
@@ -61,10 +65,29 @@ function AppContent() {
           onClose={() => setShowStatusUpdateModal(false)}
           onSuccess={() => {
             setShowStatusUpdateModal(false);
-            window.location.reload(); // Refresh to show new update
+            addNotification("Status update posted successfully!", "success");
           }}
         />
       )}
+
+      <SOSButton
+        onSuccess={() => {
+          addNotification("Emergency SOS alert sent! Help is on the way.", "success");
+        }}
+      />
+
+      {/* Notification Toasts */}
+      <div className="notificationContainer">
+        {notifications.map((notification) => (
+          <NotificationToast
+            key={notification.id}
+            message={notification.message}
+            type={notification.type}
+            duration={notification.duration}
+            onClose={() => removeNotification(notification.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

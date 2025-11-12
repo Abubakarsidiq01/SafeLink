@@ -7,5 +7,9 @@ const RoutesController = require("../controllers/RoutesController");
 // Query params: ?lat=37.7749&lon=-122.4194&intent=hospital|safeplace
 router.get("/", RoutesController.findRoute);
 
+// GET /api/routes/find-shelters - Find multiple nearby shelters
+// Query params: ?lat=37.7749&lon=-122.4194&intent=hospital|safeplace|police
+router.get("/find-shelters", RoutesController.findShelters);
+
 module.exports = router;
 

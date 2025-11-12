@@ -1,6 +1,6 @@
 // src/pages/FindShelter.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./FindShelter.css";
 
@@ -12,10 +12,190 @@ export default function FindShelter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [coords, setCoords] = useState(null);
+  const [shelters, setShelters] = useState([]);
+  const [selectedShelter, setSelectedShelter] = useState(null);
   const [routeData, setRouteData] = useState(null);
-  const [findingRoute, setFindingRoute] = useState(false);
+  const [findingShelters, setFindingShelters] = useState(false);
   const [intent, setIntent] = useState(null);
-  const [pendingIntent, setPendingIntent] = useState(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+
+  // Load Google Maps script - get API key from backend
+  useEffect(() => {
+    const loadGoogleMaps = async () => {
+      if (window.google) {
+        setMapLoaded(true);
+        return;
+      }
+
+      try {
+        // Get API key from backend
+        const response = await fetch(`${API_BASE}/api/config/google-maps-key`);
+        let apiKey = "";
+        
+        if (response.ok) {
+          const data = await response.json();
+          apiKey = data.key || "";
+        } else {
+          // Fallback to env variable
+          apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY || "";
+        }
+
+        if (!apiKey) {
+          setError("Google Maps API key not configured. Please add GOOGLE_MAPS_KEY to your .env file.");
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          setMapLoaded(true);
+        };
+        script.onerror = () => {
+          setError("Failed to load Google Maps. Please check your API key.");
+        };
+        document.head.appendChild(script);
+      } catch (error) {
+        console.error("Error loading Google Maps:", error);
+        setError("Failed to load Google Maps configuration.");
+      }
+    };
+
+    loadGoogleMaps();
+  }, []);
+
+  // Initialize map when location is available
+  useEffect(() => {
+    if (mapLoaded && coords && !mapInstanceRef.current) {
+      initializeMap();
+    }
+  }, [mapLoaded, coords]);
+
+  // Update map when shelters change
+  useEffect(() => {
+    if (mapInstanceRef.current && shelters.length > 0) {
+      updateMapMarkers();
+    }
+  }, [shelters, coords]);
+
+  const initializeMap = () => {
+    if (!window.google || !coords) return;
+
+    const map = new window.google.maps.Map(mapRef.current, {
+      center: { lat: coords.lat, lng: coords.lon },
+      zoom: 13,
+      mapTypeControl: true,
+      streetViewControl: true,
+      fullscreenControl: true,
+    });
+
+    // Add user location marker
+    new window.google.maps.Marker({
+      position: { lat: coords.lat, lng: coords.lon },
+      map: map,
+      title: "Your Location",
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: "#3b82f6",
+        fillOpacity: 1,
+        strokeColor: "#ffffff",
+        strokeWeight: 2,
+      },
+    });
+
+    mapInstanceRef.current = map;
+  };
+
+  const updateMapMarkers = () => {
+    if (!mapInstanceRef.current || !window.google) return;
+
+    // Clear existing markers
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    // Add user location marker
+    if (coords) {
+      const userMarker = new window.google.maps.Marker({
+        position: { lat: coords.lat, lng: coords.lon },
+        map: mapInstanceRef.current,
+        title: "Your Location",
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#3b82f6",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+      });
+      markersRef.current.push(userMarker);
+    }
+
+    // Add shelter markers
+    const bounds = new window.google.maps.LatLngBounds();
+    if (coords) {
+      bounds.extend({ lat: coords.lat, lng: coords.lon });
+    }
+
+    shelters.forEach((shelter, index) => {
+      const iconColor = intent === "hospital" ? "#ef4444" : intent === "police" ? "#3b82f6" : "#10b981";
+      
+      const marker = new window.google.maps.Marker({
+        position: { lat: shelter.location.lat, lng: shelter.location.lng },
+        map: mapInstanceRef.current,
+        title: shelter.name,
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: iconColor,
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+        label: {
+          text: String(index + 1),
+          color: "#ffffff",
+          fontSize: "12px",
+          fontWeight: "bold",
+        },
+      });
+
+      const infoWindow = new window.google.maps.InfoWindow({
+        content: `
+          <div style="padding: 8px; min-width: 200px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700;">${shelter.name}</h3>
+            <p style="margin: 0 0 8px 0; font-size: 14px; color: #64748b;">${shelter.address}</p>
+            ${shelter.distance ? `<p style="margin: 0; font-size: 12px; color: #94a3b8;">Distance: ${shelter.distance.toFixed(2)} km</p>` : ""}
+            ${shelter.rating ? `<p style="margin: 4px 0 0 0; font-size: 12px; color: #f59e0b;">⭐ ${shelter.rating}</p>` : ""}
+            <button onclick="window.selectShelter(${index})" style="margin-top: 8px; padding: 6px 12px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Get Directions</button>
+          </div>
+        `,
+      });
+
+      marker.addListener("click", () => {
+        infoWindow.open(mapInstanceRef.current, marker);
+        handleSelectShelter(shelter);
+      });
+
+      markersRef.current.push(marker);
+      bounds.extend({ lat: shelter.location.lat, lng: shelter.location.lng });
+    });
+
+    // Fit bounds to show all markers
+    if (shelters.length > 0) {
+      mapInstanceRef.current.fitBounds(bounds, { padding: 50 });
+    }
+
+    // Make selectShelter available globally for info window buttons
+    window.selectShelter = (index) => {
+      handleSelectShelter(shelters[index]);
+    };
+  };
 
   // Normalize recommendation to intent format
   const normalizeIntent = (recommendation) => {
@@ -39,48 +219,129 @@ export default function FindShelter() {
         },
         (error) => {
           console.log("Geolocation error:", error);
-          setError("Location access required. Please enable GPS to find routes.");
+          setError("Location access required. Please enable GPS to find shelters.");
         },
         { enableHighAccuracy: true, maximumAge: 10000, timeout: 8000 }
       );
     }
   }, []);
 
-  // Auto-fetch route when coords become available
-  useEffect(() => {
-    if (coords && pendingIntent && !routeData && !findingRoute) {
-      const intentToFetch = pendingIntent;
-      setPendingIntent(null);
-      fetchRoute(intentToFetch);
-    }
-  }, [coords, pendingIntent, routeData, findingRoute]);
-
-  // Fetch route from main API
-  const fetchRoute = async (detectedIntent) => {
+  // Find nearby shelters
+  const findShelters = async (detectedIntent) => {
     if (!coords || !coords.lat || !coords.lon) {
       setError("Location not available. Please enable GPS and allow location access.");
-      setFindingRoute(false);
       return;
     }
 
-    setFindingRoute(true);
+    setFindingShelters(true);
     setError("");
+    setShelters([]);
+    setSelectedShelter(null);
     setRouteData(null);
     setLoading(true);
 
     try {
-      const url = `${API_BASE}/api/routes?lat=${coords.lat}&lon=${coords.lon}&intent=${detectedIntent}`;
+      const url = `${API_BASE}/api/routes/find-shelters?lat=${coords.lat}&lon=${coords.lon}&intent=${detectedIntent}`;
       const res = await axios.get(url);
-      setRouteData(res.data);
-      setIntent(detectedIntent);
-      setError("");
+      
+      if (res.data && res.data.shelters && res.data.shelters.length > 0) {
+        setShelters(res.data.shelters);
+        setIntent(detectedIntent);
+      } else {
+        setError("No shelters found nearby. Try expanding your search area or check your location.");
+      }
     } catch (e) {
-      console.error("Route fetch error:", e);
-      setError(`Failed to fetch route: ${e.response?.data?.message || e.message}`);
+      console.error("Shelter search error:", e);
+      setError(`Failed to find shelters: ${e.response?.data?.message || e.message}`);
     } finally {
-      setFindingRoute(false);
+      setFindingShelters(false);
       setLoading(false);
     }
+  };
+
+  // Get directions to selected shelter
+  const handleSelectShelter = async (shelter) => {
+    setSelectedShelter(shelter);
+    setRouteData(null);
+    
+    // Draw route immediately using Google Maps DirectionsService
+    if (mapInstanceRef.current && window.google && coords) {
+      drawRouteForShelter(shelter);
+    }
+    
+    // Also fetch route data for display
+    try {
+      const url = `${API_BASE}/api/routes?lat=${coords.lat}&lon=${coords.lon}&intent=${intent}&place_id=${shelter.place_id || ""}`;
+      const res = await axios.get(url);
+      
+      if (res.data && res.data.route) {
+        setRouteData(res.data);
+      }
+    } catch (e) {
+      console.error("Route fetch error:", e);
+      // Don't show error if map route drawing works
+    }
+  };
+
+  const drawRouteForShelter = (shelter) => {
+    if (!mapInstanceRef.current || !window.google || !shelter || !coords) return;
+
+    // Clear existing route
+    if (window.routePolyline) {
+      window.routePolyline.setMap(null);
+      window.routePolyline = null;
+    }
+
+    if (window.directionsRenderer) {
+      window.directionsRenderer.setMap(null);
+      window.directionsRenderer = null;
+    }
+
+    // Use DirectionsService for accurate route rendering
+    const directionsService = new window.google.maps.DirectionsService();
+    const directionsRenderer = new window.google.maps.DirectionsRenderer({
+      map: mapInstanceRef.current,
+      suppressMarkers: false,
+      polylineOptions: {
+        strokeColor: "#3b82f6",
+        strokeWeight: 4,
+        strokeOpacity: 0.8,
+      },
+    });
+
+    const request = {
+      origin: { lat: coords.lat, lng: coords.lon },
+      destination: { lat: shelter.location.lat, lng: shelter.location.lng },
+      travelMode: window.google.maps.TravelMode.DRIVING,
+    };
+
+    directionsService.route(request, (result, status) => {
+      if (status === window.google.maps.DirectionsStatus.OK) {
+        directionsRenderer.setDirections(result);
+        window.directionsRenderer = directionsRenderer;
+      } else {
+        console.error("Directions request failed:", status);
+        // Fallback: draw straight line
+        const path = [
+          { lat: coords.lat, lng: coords.lon },
+          { lat: shelter.location.lat, lng: shelter.location.lng }
+        ];
+        const polyline = new window.google.maps.Polyline({
+          path: path,
+          geodesic: true,
+          strokeColor: "#3b82f6",
+          strokeOpacity: 0.5,
+          strokeWeight: 3,
+          icons: [{
+            icon: { path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
+            offset: "50%",
+            repeat: "100px"
+          }]
+        });
+        polyline.setMap(mapInstanceRef.current);
+        window.routePolyline = polyline;
+      }
+    });
   };
 
   // Voice Input with Voice Activity Detection
@@ -92,7 +353,6 @@ export default function FindShelter() {
       setRecording(true);
       setError("");
 
-      // Voice Activity Detection using Web Audio API
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const analyser = audioContext.createAnalyser();
       const microphone = audioContext.createMediaStreamSource(stream);
@@ -103,8 +363,8 @@ export default function FindShelter() {
       const dataArray = new Uint8Array(bufferLength);
       
       let silenceStartTime = null;
-      const SILENCE_THRESHOLD = 20; // Adjust based on testing
-      const SILENCE_DURATION = 1500; // Stop after 1.5 seconds of silence
+      const SILENCE_THRESHOLD = 20;
+      const SILENCE_DURATION = 1500;
       let lastSoundTime = Date.now();
       let isActive = true;
       
@@ -115,18 +375,15 @@ export default function FindShelter() {
         const average = dataArray.reduce((a, b) => a + b) / bufferLength;
         
         if (average > SILENCE_THRESHOLD) {
-          // Sound detected
           lastSoundTime = Date.now();
           silenceStartTime = null;
         } else {
-          // Silence detected
           if (silenceStartTime === null) {
             silenceStartTime = Date.now();
           }
           
           const silenceDuration = Date.now() - silenceStartTime;
           if (silenceDuration >= SILENCE_DURATION && Date.now() - lastSoundTime >= SILENCE_DURATION) {
-            // Stop recording after silence
             isActive = false;
             if (mediaRecorder.state === "recording") {
               mediaRecorder.stop();
@@ -153,10 +410,8 @@ export default function FindShelter() {
         stream.getTracks().forEach((t) => t.stop());
         try {
           audioContext.close();
-        } catch (e) {
-          // Ignore if already closed
-        }
-        
+        } catch (e) {}
+
         if (chunks.length === 0) {
           setError("No audio recorded. Please try again.");
           return;
@@ -182,17 +437,11 @@ export default function FindShelter() {
           const detectedIntent = normalizeIntent(recommendation);
           
           setIntent(detectedIntent);
-          setLoading(false);
-
-          if (coords && coords.lat && coords.lon) {
-            await fetchRoute(detectedIntent);
-          } else {
-            setPendingIntent(detectedIntent);
-            setError("Waiting for location access...");
-          }
+          await findShelters(detectedIntent);
         } catch (err) {
           console.error("Error processing audio:", err);
           setError("Failed to process audio. Please try again.");
+        } finally {
           setLoading(false);
         }
       };
@@ -200,7 +449,6 @@ export default function FindShelter() {
       mediaRecorder.start();
       checkVoiceActivity();
       
-      // Safety timeout - stop after 30 seconds max
       setTimeout(() => {
         if (mediaRecorder.state === "recording") {
           mediaRecorder.stop();
@@ -239,44 +487,41 @@ export default function FindShelter() {
       const detectedIntent = normalizeIntent(recommendation);
       
       setIntent(detectedIntent);
-      setLoading(false);
-
-      if (coords && coords.lat && coords.lon) {
-        await fetchRoute(detectedIntent);
-      } else {
-        setPendingIntent(detectedIntent);
-        setError("Waiting for location access...");
-      }
+      await findShelters(detectedIntent);
     } catch (err) {
       console.error("Error processing text:", err);
       setError("Failed to process request. Please check your connection and try again.");
+    } finally {
       setLoading(false);
     }
   };
 
   const handleStartOver = () => {
+    setShelters([]);
+    setSelectedShelter(null);
     setRouteData(null);
     setIntent(null);
     setText("");
     setError("");
-    setFindingRoute(false);
-    setPendingIntent(null);
+    setFindingShelters(false);
+    
+    // Clear route from map
+    if (window.routePolyline) {
+      window.routePolyline.setMap(null);
+      window.routePolyline = null;
+    }
   };
 
   const getIntentLabel = () => {
-    if (intent === "hospital") return "Hospital";
-    if (intent === "police") return "Police Station";
-    return "Safe Place";
+    if (intent === "hospital") return "Hospitals";
+    if (intent === "police") return "Police Stations";
+    return "Safe Places";
   };
 
-  // Show route results
-  if (routeData) {
-    const dest = routeData.destination;
-    const route = routeData.route;
-
+  // Show results if shelters found
+  if (shelters.length > 0) {
     return (
       <div className="findShelter">
-
         {intent === "police" && (
           <div className="findShelter__emergencyAlert">
             <div className="findShelter__emergencyContent">
@@ -294,65 +539,89 @@ export default function FindShelter() {
         <div className="findShelter__grid">
           {/* Map */}
           <div className="findShelter__card findShelter__card--map">
-            <h3 className="findShelter__cardTitle">Route Map</h3>
-            {routeData?.route?.map_url ? (
-              <iframe
-                title="Route Map"
-                src={routeData.route.map_url}
-                className="findShelter__map"
-                loading="lazy"
-                allowFullScreen
-              />
-            ) : (
-              <div className="findShelter__mapPlaceholder">Loading map...</div>
-            )}
+            <h3 className="findShelter__cardTitle">Nearby {getIntentLabel()}</h3>
+            <div className="findShelter__map" ref={mapRef} style={{ height: "500px", width: "100%" }} />
           </div>
 
-          {/* Destination Info */}
+          {/* Shelter List */}
           <div className="findShelter__card">
-            <h3 className="findShelter__cardTitle">Destination</h3>
-            <div className="findShelter__destination">
-              <div className="findShelter__destinationName">{dest?.name || "Unknown"}</div>
-              <div className="findShelter__destinationAddress">{dest?.address || "Address not available"}</div>
-              
-              <div className="findShelter__routeInfo">
-                <div className="findShelter__routeItem">
-                  <div className="findShelter__routeLabel">Distance</div>
-                  <div className="findShelter__routeValue">{route?.distance || "—"}</div>
+            <h3 className="findShelter__cardTitle">Found {shelters.length} {getIntentLabel()}</h3>
+            <div className="findShelter__shelterList">
+              {shelters.map((shelter, index) => (
+                <div
+                  key={shelter.place_id || index}
+                  className={`findShelter__shelterItem ${selectedShelter?.place_id === shelter.place_id ? "findShelter__shelterItem--selected" : ""}`}
+                  onClick={() => handleSelectShelter(shelter)}
+                >
+                  <div className="findShelter__shelterNumber">{index + 1}</div>
+                  <div className="findShelter__shelterInfo">
+                    <div className="findShelter__shelterName">{shelter.name}</div>
+                    <div className="findShelter__shelterAddress">{shelter.address}</div>
+                    <div className="findShelter__shelterMeta">
+                      {shelter.distance && (
+                        <span className="findShelter__shelterDistance">
+                          📍 {shelter.distance.toFixed(2)} km away
+                        </span>
+                      )}
+                      {shelter.rating && (
+                        <span className="findShelter__shelterRating">
+                          ⭐ {shelter.rating}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {routeData && selectedShelter?.place_id === shelter.place_id && (
+                    <div className="findShelter__routeSummary">
+                      <div className="findShelter__routeItem">
+                        <span>Distance:</span>
+                        <strong>{routeData.route?.distance || "—"}</strong>
+                      </div>
+                      <div className="findShelter__routeItem">
+                        <span>Time:</span>
+                        <strong>{routeData.route?.eta || "—"}</strong>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="findShelter__routeItem">
-                  <div className="findShelter__routeLabel">Estimated Time</div>
-                  <div className="findShelter__routeValue">{route?.eta || "—"}</div>
-                </div>
-                <div className="findShelter__routeItem">
-                  <div className="findShelter__routeLabel">Distance (km)</div>
-                  <div className="findShelter__routeValue">{route?.distance_km || "—"} km</div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Route Steps - Only show if steps exist and are meaningful */}
-        {route?.steps && route.steps.length > 0 && route.steps.length <= 10 && (
+        {/* Route Details */}
+        {routeData && selectedShelter && (
           <div className="findShelter__card">
-            <h3 className="findShelter__cardTitle">Turn-by-Turn Directions</h3>
-            <div className="findShelter__steps">
-              {route.steps.slice(0, 8).map((step, index) => (
-                <div key={index} className="findShelter__step">
-                  <div className="findShelter__stepNumber">{index + 1}</div>
-                  <div className="findShelter__stepContent">
-                    <div
-                      className="findShelter__stepInstruction"
-                      dangerouslySetInnerHTML={{ __html: step.instruction }}
-                    />
-                    <div className="findShelter__stepDetails">
-                      {step.distance} • {step.duration}
+            <h3 className="findShelter__cardTitle">Directions to {selectedShelter.name}</h3>
+            {routeData.route?.map_url && (
+              <div style={{ marginBottom: "16px", textAlign: "center" }}>
+                <a
+                  href={routeData.route.map_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="findShelter__directionsLink"
+                >
+                  Open in Google Maps →
+                </a>
+              </div>
+            )}
+            {routeData.route?.steps && routeData.route.steps.length > 0 && (
+              <div className="findShelter__steps">
+                {routeData.route.steps.slice(0, 10).map((step, index) => (
+                  <div key={index} className="findShelter__step">
+                    <div className="findShelter__stepNumber">{index + 1}</div>
+                    <div className="findShelter__stepContent">
+                      <div
+                        className="findShelter__stepInstruction"
+                        dangerouslySetInnerHTML={{ __html: step.instruction }}
+                      />
+                      <div className="findShelter__stepDetails">
+                        {step.distance} • {step.duration}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -362,12 +631,12 @@ export default function FindShelter() {
   }
 
   // Show loading state
-  if (findingRoute || loading || (intent && !routeData && !error) || pendingIntent) {
+  if (findingShelters || loading) {
     return (
       <div className="findShelter">
         <div className="findShelter__loading">
           <div className="spinner"></div>
-            <span>Finding route...</span>
+          <span>Finding nearby shelters...</span>
         </div>
       </div>
     );
@@ -378,9 +647,9 @@ export default function FindShelter() {
     <div className="findShelter">
       <div className="findShelter__inputSection">
         <div className="findShelter__inputCard">
-          <h3 className="findShelter__inputTitle">Describe Your Situation</h3>
+          <h3 className="findShelter__inputTitle">Find Nearest Shelter</h3>
           <p className="findShelter__inputDescription">
-            Enter details about your emergency or situation. We'll find the nearest appropriate location and provide directions.
+            Describe your situation or use voice input. We'll find the nearest appropriate location and show you multiple options on the map.
           </p>
           
           <div className="findShelter__inputGroup">
@@ -398,14 +667,14 @@ export default function FindShelter() {
                 disabled={recording || loading}
                 className={`findShelter__voiceBtn ${recording ? "findShelter__voiceBtn--active" : ""}`}
               >
-                {recording ? "Recording..." : "Voice Input"}
+                {recording ? "🎤 Recording..." : "🎤 Voice Input"}
               </button>
               <button
                 onClick={handleTextSubmit}
                 disabled={loading || !text.trim()}
                 className="findShelter__submitBtn"
               >
-                {loading ? "Processing..." : "Find Location"}
+                {loading ? "Searching..." : "Find Shelters"}
               </button>
             </div>
           </div>
@@ -421,7 +690,7 @@ export default function FindShelter() {
             disabled={loading}
             className="findShelter__quickBtn findShelter__quickBtn--medical"
           >
-            Medical Help
+            🏥 Medical Help
           </button>
           <button
             onClick={() => {
@@ -431,7 +700,7 @@ export default function FindShelter() {
             disabled={loading}
             className="findShelter__quickBtn findShelter__quickBtn--police"
           >
-            Police Assistance
+            🚔 Police Assistance
           </button>
           <button
             onClick={() => {
@@ -441,18 +710,18 @@ export default function FindShelter() {
             disabled={loading}
             className="findShelter__quickBtn findShelter__quickBtn--shelter"
           >
-            Safe Place
+            🏠 Safe Place
           </button>
         </div>
 
         {/* Location Status */}
         {coords ? (
           <div className="findShelter__status findShelter__status--success">
-            Location detected
+            ✅ Location detected: {coords.lat.toFixed(4)}, {coords.lon.toFixed(4)}
           </div>
         ) : (
           <div className="findShelter__status findShelter__status--warning">
-            Location access needed for accurate routes
+            ⚠️ Location access needed to find nearby shelters
           </div>
         )}
       </div>

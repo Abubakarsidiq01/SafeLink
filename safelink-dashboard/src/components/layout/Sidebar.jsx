@@ -64,6 +64,22 @@ export default function Sidebar({ onRequestHelp, onStatusUpdate }) {
         </button>
         
         <div className="sidebar__sectionTitle" style={{ marginTop: "24px" }}>
+          Disaster Management
+        </div>
+        <button
+          className={`sidebar__item ${isActive("/disaster-management") ? "sidebar__item--active" : ""}`}
+          onClick={() => navigate("/disaster-management")}
+        >
+          Disaster Management
+        </button>
+        <button
+          className={`sidebar__item ${isActive("/location-updates") ? "sidebar__item--active" : ""}`}
+          onClick={() => navigate("/location-updates")}
+        >
+          Location Updates
+        </button>
+        
+        <div className="sidebar__sectionTitle" style={{ marginTop: "24px" }}>
           Actions
         </div>
         <button

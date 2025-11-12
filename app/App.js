@@ -7,7 +7,6 @@ import { View, ActivityIndicator, StyleSheet } from "react-native";
 import MeshHomeScreen from "./screens/MeshHomeScreen";
 import SendMessageScreen from "./screens/SendMessageScreen";
 import PeerListScreen from "./screens/PeerListScreen";
-import StressTestScreen from "./screens/StressTestScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import AlertDetailScreen from "./screens/AlertDetailScreen";
 
@@ -54,7 +53,6 @@ export default function App() {
         <Stack.Screen name="MeshHome" component={MeshHomeScreen} />
         <Stack.Screen name="SendMessage" component={SendMessageScreen} />
         <Stack.Screen name="PeerList" component={PeerListScreen} />
-        <Stack.Screen name="StressTest" component={StressTestScreen} />
         <Stack.Screen 
           name="AlertDetail" 
           component={AlertDetailScreen}

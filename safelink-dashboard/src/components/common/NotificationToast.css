@@ -1,0 +1,88 @@
+.notificationToast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 300px;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 2000;
+  animation: slideIn 0.3s ease-out;
+  border-left: 4px solid #3b82f6;
+}
+
+.notificationToast--success {
+  border-left-color: #10b981;
+}
+
+.notificationToast--error {
+  border-left-color: #ef4444;
+}
+
+.notificationToast--warning {
+  border-left-color: #f59e0b;
+}
+
+.notificationToast--info {
+  border-left-color: #3b82f6;
+}
+
+.notificationToast__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  gap: 16px;
+}
+
+.notificationToast__message {
+  flex: 1;
+  font-size: 14px;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.notificationToast__close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.notificationToast__close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .notificationToast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+}
+

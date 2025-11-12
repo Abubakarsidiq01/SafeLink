@@ -5,7 +5,7 @@ import MessageRelay from "./MessageRelay.js";
 import GeoBroadcast from "./GeoBroadcast.js";
 import SyncManager from "./SyncManager.js";
 import AlertManager from "./AlertManager.js";
-import HealthMonitor from "../../../services/storage/HealthMonitor.js";
+import HealthMonitor from "../storage/HealthMonitor.js";
 import { nowISO } from "../../utils/TimeUtils.js";
 
 class MeshManager {
