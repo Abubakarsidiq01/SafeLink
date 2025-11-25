@@ -23,12 +23,11 @@ services:
     healthCheckPath: /health
 
   # Frontend Dashboard
-  - type: web
+  - type: static
     name: safelink-dashboard
-    env: static
     buildCommand: cd safelink-dashboard && npm install && npm run build
     staticPublishPath: safelink-dashboard/dist
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://safelink-api.onrender.com
+        value: https://safelink-1e88.onrender.com
 
