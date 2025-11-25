@@ -25,8 +25,9 @@ services:
   # Frontend Dashboard
   - type: static
     name: safelink-dashboard
-    buildCommand: cd safelink-dashboard && npm install && npm run build
-    staticPublishPath: safelink-dashboard/dist
+    rootDir: safelink-dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
         value: https://safelink-1e88.onrender.com
