@@ -10,7 +10,9 @@
     "app"
   ],
   "scripts": {
-    "start": "scripts\\start.bat",
+    "start": "cd server && npm start",
+    "start:server": "cd server && npm start",
+    "start:dashboard": "cd safelink-dashboard && npm run dev",
     "stop": "scripts\\stop.bat",
     "start:app": "scripts\\start-app.bat"
   },
