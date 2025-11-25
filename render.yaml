@@ -1,0 +1,33 @@
+services:
+  # Backend API Server
+  - type: web
+    name: safelink-api
+    env: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_MAPS_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://safelink-dashboard.onrender.com
+    healthCheckPath: /health
+
+  # Frontend Dashboard
+  - type: web
+    name: safelink-dashboard
+    env: static
+    buildCommand: cd safelink-dashboard && npm install && npm run build
+    staticPublishPath: safelink-dashboard/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://safelink-api.onrender.com
+

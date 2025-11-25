@@ -13,7 +13,8 @@ export default function ConnectionStatus() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3000);
         
-        const response = await fetch("http://localhost:4000/health", {
+        const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+        const response = await fetch(`${API_BASE}/health`, {
           method: "GET",
           signal: controller.signal,
         });
