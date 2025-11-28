@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 4000;
 // CORS configuration
 const allowedOrigins = process.env.FRONTEND_URL 
   ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-  : ['http://localhost:5173', 'http://localhost:3000'];
+  : [' is nohttp://localhost:5173', 'http://localhost:3000'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -56,28 +56,6 @@ app.use(cors({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.get("/", (req, res) => {
-  res.json({
-    name: "SafeLink API",
-    version: "1.0.0",
-    status: "running",
-    timestamp: new Date().toISOString(),
-    endpoints: {
-      health: "/health",
-      messages: "/api/messages",
-      peers: "/api/peers",
-      rescues: "/api/rescues",
-      helpRequests: "/api/help-requests",
-      firstAid: "/api/first-aid",
-      medai: "/api/medai",
-      routes: "/api/routes",
-      locationUpdates: "/api/location-updates",
-      weather: "/api/weather",
-      config: "/api/config"
-    }
-  });
-});
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok", ts: new Date().toISOString() });
@@ -99,4 +77,3 @@ app.listen(PORT, () => {
   console.log(`[SafeLink][Server] 🌐 Listening on port ${PORT}`);
   console.log(`[SafeLink][Server] 🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
-
